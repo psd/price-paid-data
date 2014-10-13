@@ -1,12 +1,12 @@
-Bootstrapping
+h1. One CSV, 30 stories: #1 Bootstrapping
 
-_This is day 1 of "One CSV, 30 days":http://blog/.whatfettle.com/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data_
+_This is day 1 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data_
 
 To get started we need to download a copy of the complete CSV file:
 
 bc. $ curl -O http://publicdata.landregistry.gov.uk/market-trend-data/price-paid-data/a/pp-complete.csv
 
-A "CSV":http://en.wikipedia.org/wiki/Comma-separated_values format file is all well and good for those of a spreadsheet persuasion, but I'm an inveterate Unix hack, and whilst I could code in a scripting language, or use a https://github.com/dbro/csvquote, a one-off conversion to "Tab Separated Values (TSV)":http://en.wikipedia.org/wiki/Tab-separated_values will open up the "power of the pipeline":http://jeroenjanssens.com/2013/09/19/seven-command-line-tools-for-data-science.html.
+A "CSV":http://en.wikipedia.org/wiki/Comma-separated_values format file is all well and good for those of a spreadsheet persuasion, but I'm an inveterate Unix hack, and whilst I could process CSV in a scripting language, or use something like "csvquote":https://github.com/dbro/csvquote, a one-off conversion to "Tab Separated Values (TSV)":http://en.wikipedia.org/wiki/Tab-separated_values will open up the "power of the command line":http://jeroenjanssens.com/2013/09/19/seven-command-line-tools-for-data-science.html.
 
 The Python script "csv_to_tsv.py":https://github.com/clarkgrubb/data-tools/blob/master/src/csv_to_tsv.py is a slow but simple way of converting CSV to TSV. Unfortunately this script and other Unix commands fail when processing the Land Registry CSV due to illegal characters:
 
