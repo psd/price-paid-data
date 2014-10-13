@@ -8,7 +8,7 @@ bc. $ curl -O http://publicdata.landregistry.gov.uk/market-trend-data/price-paid
 
 A "CSV":http://en.wikipedia.org/wiki/Comma-separated_values format file is all well and good for those of a spreadsheet persuasion, but I'm an inveterate Unix hack, and whilst I could process CSV in a scripting language, or use something like "csvquote":https://github.com/dbro/csvquote, a one-off conversion to "Tab Separated Values (TSV)":http://en.wikipedia.org/wiki/Tab-separated_values will open up the "power of the command line":http://jeroenjanssens.com/2013/09/19/seven-command-line-tools-for-data-science.html.
 
-The Python script "csv_to_tsv.py":https://github.com/clarkgrubb/data-tools/blob/master/src/csv_to_tsv.py is a slow but simple way of converting CSV to TSV. Unfortunately this script and other Unix commands fail when processing the Land Registry CSV due to illegal characters:
+The Python script "csv_to_tsv.py":https://github.com/clarkgrubb/data-tools/blob/master/src/csv_to_tsv.py is a slow but simple way of converting CSV to TSV. Unfortunately this script and other Unix commands fail when processing the Land Registry file due to illegal characters:
 
 bc. $ iconv pp-complete.csv > /dev/null
 iconv: pp-complete.csv:11432006:106: cannot convert
@@ -56,5 +56,7 @@ $ wc -l pp*
  19325571 pp.tsv
  38651142 total
 
-Well that was a little more gnarly than I would have liked for the first day, but at least we now have information about almost 20 million transactions on property in a single, processable file. Tomorrow we can indulge in a little light data spelunking!
+Well that was a little more gnarly than I would have liked for the first day, but at least we now have information about almost 20 million transactions on property in a single, processable file.
+
+Tomorrow we can indulge in a little light data spelunking!
 
