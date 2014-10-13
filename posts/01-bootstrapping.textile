@@ -48,8 +48,8 @@ bc. | sed -e 's/ 00:00//' > pp.tsv
 
 leaving a much smaller file containing the same number of lines:
 
-bc.  $ ls - pp*
--rw-r----- 1 psd  staff  3331762329 12 Oct 17:55 pp-complete.csv
+bc.  $ ls -l pp*
+-rw-r----- 1 psd  staff  3331762329 13 Oct 17:55 pp-complete.csv
 -rw-r----- 1 psd  staff  1863018927 13 Oct 20:29 pp.tsv
 $ wc -l pp*
  19325571 pp-complete.csv
