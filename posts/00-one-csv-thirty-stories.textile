@@ -1,0 +1,11 @@
+h1. One CSV, thirty stories
+
+I've hit something of a creative impasse. I stopped blogging here a while ago, and whilst I think I've helped other people make things, I haven't really been making things myself.
+
+A number of colleagues for similar reasons have successfully used the "30 days song challenge":http://heckyeahtumblrchallenges.tumblr.com/post/6152604154/30-day-song-challenge to unblock their blogging, and this has inspired me to try something similar, something to force me to make visualisations, and write about them.
+
+So I've picked on a single dataset, "the list of price paid for property":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from "The Land Registry":https://www.gov.uk/government/organisations/land-registry, and every day over the next month I'll use it to make 30 small things to talk about open data and visualisation. Thirty is "a nice round number":http://backtothefuture.wikia.com/wiki/DeLorean_time_machine, but at this point seems quite unachievable and a little ridiculous for what is after all a single CSV file.
+
+The code for these articles will be "open source":https://github.com/psd/price-paid-data, natch, and I'll aim to build "a portfolio site":http://psd.github.io/price-paid-data as we go along.
+
+_Something of a disclaimer: "I am a Technical Architect with the Government Digital Service":https://gds.blog.gov.uk/2012/02/23/blurring-boundaries/ and have been working with the "Land Registry to develop an alpha digital service":http://blog.landregistry.gov.uk/new-digital-services-working-alpha/. However these articles could be written by anyone with the time and inclination to dig into the open data, something the Land Registry encourages you to do through initiatives such as "the GeoVation challenge":https://www.geovation.org.uk/launching-geovation-housing-challenge/. They certainly won't be used to announce new services or reveal information or data which isn't already public. The articles definitely shouldn't be read as saying anything in an official capacity on behalf of these organisations, and you should treat my conclusions as the conjecture they are. I'm just this guy, you know?_
