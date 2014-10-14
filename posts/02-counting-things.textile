@@ -1,0 +1,108 @@
+h1. One CSV, 30 stories: #2 Counting things
+
+_This is day 2 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data_
+
+bq. Statistics: The science of producing unreliable facts from reliable figures — Evan Esar
+
+The file we made "yesterday":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories-bootstrapping/ contains 19 million property transactions.  We can use "awk":http://en.wikipedia.org/wiki/AWK to give us some basic statistics on the first field in the file, the property price:
+
+bc. $ cut -f1 pp.tsv | awk 'NR == 1 {
+    min = $1;
+    max = $1;
+}
+{
+    if ($1 < min) min = $1;
+    if ($1 > max) max = $1;
+    sum += $1;
+    sumsq += $1 * $1
+}
+END {
+    printf "count\t%d\n", NR
+    printf "min\t%d\n", min
+    printf "max\t%d\n", max
+    printf "sum\t%d\n", sum
+    printf "mean\t%f\n", sum/NR
+    printf "sd\t%f\n", sqrt(sumsq/NR - (sum/NR)**2)
+}'
+
+gives us some basic statistics about the property prices contained within the file:
+
+bc. count  19325571
+min    5050
+max    54959000
+sum    3078384329109
+mean   159290.730872
+sd     180368.570700
+
+So our file contains a record of more than £3 "trillion":http://en.wikipedia.org/wiki/Trillion transacted over the course of a number of years, but over how many years? We can find out by chopping out the column, removing the month and year and counting the uniquely sorted result:
+
+bc. $ cut -f2 < data/pp.tsv | sed 's/-.*$//' | sort | uniq | wc -l
+20
+
+People get excited about the likes of "Hadoop":http://en.wikipedia.org/wiki/Apache_Hadoop, but for this kind of hack on this size of file Unix sort is pretty amazing, and fast enough. I guess it's had 40 odd years of computer scientists showing off by optimising the heck out of the "open source code":http://git.savannah.gnu.org/cgit/coreutils.git/tree/src/sort.c. There's an idiom of sort which I use a lot to find the distribution of a data item, for example we can quickly find the busiest days using:
+
+bc. cut -f2 | sort | uniq -c | sort -rn | head
+
+I say quickly, but even with the wonder of sort these are quite expensive operations, so let's create indexes by counting all of the columns which I'm sure will come in handy later:
+
+bc. while read column title
+do
+    cat data/pp.tsv |
+        cut -d' ' -f$column |
+        sort |
+        uniq -c |
+        sort -rn |
+        sed -e 's/^ *//' -e 's/  */⋯/g' > $title.tsv
+done <<-!
+1 price
+2 date
+3 postcode
+4 type
+5 new
+6 duration
+7 paon
+8 saon
+9 street
+10 locality
+11 town
+12 district
+13 county
+14 status
+!
+
+You might like to make some tea whist that happens. You can probably use your laptop to boil the kettle.
+
+I've gone this far without looking at any particular record. That's because the data contains addresses and it feels to a little strange to highlight someone's residence. Ideally I'd cite somewhere such as "Admiralty Arch":https://www.gov.uk/government/news/government-leases-historic-admiralty-arch or the "Land Registry Head Office":http://www.lse.ac.uk/newsAndMedia/news/archives/2013/04/32LIFOpening.aspx but the dataset "excludes quite a few transactions":https://www.gov.uk/about-the-price-paid-data including those on commercial properties, and leaseholds. That's definitely a thing.
+
+I was interested in the maximum price paid for a property. Let's look for that one:
+
+bc. $ grep "54959000"  data/pp.tsv
+54959000    2012-03-26  SW10 9SU    S   N   F   20      THE BOLTONS     LONDON  KENSINGTON AND CHELSEA  GREATER LONDON  A
+
+Which is a very large house in Chelsea. No surprise there, but something that is noticeable is how slow the grep command is operating on our large file:
+
+bc. $ time grep "54959000"  data/pp.tsv
+...
+real    0m46.950s
+user    0m45.926s
+sys 0m0.837s
+
+Maybe we can speed that up a little using a regular expression:
+
+bc. $ time egrep "^54959000"  data/pp.tsv
+...
+real    0m30.036s
+user    0m29.130s
+sys 0m0.727s
+
+Which is still quite slow. Literal programming with Unix tools is quick and fun, but I keep forgetting how quick a programming language like awk can be:
+
+bc. $ time awk '$1 == "54959000" { print }' <  data/pp.tsv 
+...
+real    0m11.475s
+user    0m8.553s
+sys 0m1.086s
+
+I think that's probably enough command line bashing for now.
+
+Statistics are helpful, but it's quite hard to grok the numbers without seeing them laid out, so tomorrow we should draw some graphs.
