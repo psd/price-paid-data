@@ -12,7 +12,7 @@ do
         sort |
         uniq -c |
         sort -rn |
-        sed -e 's/^ *//' -e 's/  */⋯/g' 
+        sed -e 's/^ *//' -e 's/  */	/g' 
     ) > data/$title.tsv
 
 done  < etc/cols.tsv
