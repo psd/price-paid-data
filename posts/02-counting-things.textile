@@ -4,7 +4,7 @@ _This is day 2 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/on
 
 bq. Statistics: The science of producing unreliable facts from reliable figures — Evan Esar
 
-The file we made "yesterday":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories-bootstrapping/ contains 19 million property transactions.  We can use "awk":http://en.wikipedia.org/wiki/AWK to give us some basic statistics on the first field in the file, the property price:
+The file we made "yesterday":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories-bootstrapping/ contains 19 million property transactions.  We can use "awk":http://en.wikipedia.org/wiki/AWK to find some basic statistics:
 
 bc. $ cut -f1 pp.tsv | awk 'NR == 1 {
     min = $1;
@@ -78,7 +78,7 @@ done <<-!
 
 You might like to make some tea whist that happens. You could probably use your laptop to warm the pot.  When it's complete we have a file for each column, allowing us to find the busiest days:
 
-.bc head date.tsv
+bc. head date.tsv
 $ head data/date.tsv 
 26299⋯2001-06-29
 26154⋯2002-06-28
@@ -93,7 +93,7 @@ $ head data/date.tsv
 
 and the most popular prices:
 
-.bc head price.tsv
+bc. head price.tsv
 208199⋯250000
 185912⋯125000
 163323⋯120000
@@ -107,13 +107,13 @@ and the most popular prices:
 
 So that's the "mode":http://en.wikipedia.org/wiki/Mode_(statistics) for each column, and a breakdown of categories such as the number of recorded transactions on new versus old builds:
 
-.bc cat new.tsv
+bc. cat new.tsv
 17351417⋯N
 1974154⋯Y
 
 and the most active postcodes:
 
-.bc head postcode.tsv
+bc. head postcode.tsv
 29913⋯
 280⋯TR8⋯4LX
 274⋯CM21⋯9PF
