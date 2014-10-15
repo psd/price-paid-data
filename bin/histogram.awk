@@ -2,8 +2,11 @@
 
 # draws histogram for a reverse sorted count file
 
+BEGIN {
+    FS="	"
+}
 NR == 1 {
-    width = 60
+    width = 65;
     max = $1;
 }
 {
@@ -15,5 +18,5 @@ NR == 1 {
         bar = bar"#";
 
     count = sprintf("(%d)", $1);
-    printf "%-10s %10s %s\n", title, count, bar;
+    printf "%-15s %10s %s\n", title, count, bar;
 }
