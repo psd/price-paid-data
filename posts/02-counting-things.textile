@@ -45,7 +45,7 @@ The standard deviation makes me think the median price would be useful. We can u
 bc. $ cut -f1 < pp.tsv | sort | sed -n $(expr $(grep count stats.tsv|cut -f2) / 2)p
 265000
 
-Judging from enterprisey emails in my inbox, some people are quite excited about "Data Warehousing": and cool things like "Hadoop":http://en.wikipedia.org/wiki/Apache_Hadoop, but for this kind of hackery Unix sort is pretty amazing, and plenty good enough. I guess it's had 40 odd years of computer scientists showing off by optimising the heck out of the "open source code":http://git.savannah.gnu.org/cgit/coreutils.git/tree/src/sort.c. There's an idiom of sort which I use a lot to find the distribution of a data item, for example we can quickly find the busiest days using:
+Judging from enterprisey emails in my inbox, some people are quite excited about "Data Warehousing": and cool things like "Hadoop":http://en.wikipedia.org/wiki/Apache_Hadoop, but for this kind of experimental hackery Unix sort is great. I guess it's had 40 odd years of computer scientists showing off by optimising the heck out of the "open source code":http://git.savannah.gnu.org/cgit/coreutils.git/tree/src/sort.c. There's an idiom of sort which I use a lot to find the distribution of a data item, for example we can quickly find the busiest days using:
 
 bc. cut -f2 pp.tsv | sort | uniq -c | sort -rn | head
 
@@ -134,7 +134,7 @@ To be fair and reduce the risk of weirding someone out I need to pick on a prope
 bc. $ grep "54959000"  data/pp.tsv
 54959000    2012-03-26  SW10 9SU    S   N   F   20      THE BOLTONS     LONDON  KENSINGTON AND CHELSEA  GREATER LONDON  A
 
-It's a very large house in Chelsea! No surprise there then. If I was interested I could now go to the Land Registry, pay £3 and find out who lives there, details of others with an interest in the property, a title plan and possibly other restrictions such as any rights of way and if they have to pay to repair the local church spire. This is what "Theodore Burton Fox Ruoff":http://en.wikipedia.org/wiki/HM_Land_Registry called looking behind the curtain.
+It's a very large house in Chelsea! No surprise there then. If I was interested I could now go to the "Land Registry view title service":https://www.gov.uk/search-property-information-land-registry, pay £3 and find out who lives there, details of others with an interest in the property, a title plan and possibly other restrictions such as any rights of way and if they have to pay to repair the local church spire. This is what "Theodore Burton Fox Ruoff":http://en.wikipedia.org/wiki/HM_Land_Registry called looking behind the curtain.
 
 Anyway, back to the spelunking. Something that is noticeable is how slow that grep command is operating on our large file:
 
@@ -152,7 +152,7 @@ real    0m30.036s
 user    0m29.130s
 sys 0m0.727s
 
-Which is still quite slow. I hope I've shown how literal programming with the Unix pipeline can be quick and fun, but it's easy to forget how quick a programming language can be, even one as simplistic as awk:
+Which is still quite slow. I hope I've shown how plugging around with the Unix pipeline can be quick and fun, but it's easy to forget how quick a programming language can be, even one as simplistic as awk:
 
 bc. $ time awk '$1 == "54959000" { print }' <  data/pp.tsv 
 ...
@@ -160,4 +160,4 @@ real    0m11.475s
 user    0m8.553s
 sys 0m1.086s
 
-With that my lap is suffering from "local warming":, it's very late, and I'm quite tired so I think that's probably enough command line bashing for now.  Statistics are great, but it's quite hard to grok numbers. Tomorrow we should probably draw some graphs.
+With that my lap is suffering from "local warming":http://www.ted.com/talks/yossi_vardi_fights_local_warming, it's very late, and I'm quite tired so I think that's probably enough command line bashing for now.  Statistics are great, but it's quite hard to grok numbers. Tomorrow we should probably draw some graphs.

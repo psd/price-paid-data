@@ -1,4 +1,4 @@
 _site/
 .sass-cache/
-data
+data/
 bin/csv-to-tsv.py
