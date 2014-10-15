@@ -11,8 +11,8 @@ stats:	data/stats.tsv
 # bootstrap by make makefiles
 -include makefiles/counts.mk
 
-data/stats.tsv:
-	bin/stats.sh > $@
+data/stats.tsv:	data/pp.tsv bin/stats.sh
+	cut -f1 data/pp.tsv | bin/stats.sh > $@
 
 data/pp.tsv:	bin/csv-to-tsv.py
 	@mkdir -p data
