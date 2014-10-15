@@ -23,63 +23,120 @@ END {
     printf "sum\t%d\n", sum
     printf "mean\t%f\n", sum/NR
     printf "sd\t%f\n", sqrt(sumsq/NR - (sum/NR)**2)
-}'
+}' > stats.tsv
 
 gives us some basic statistics about the property prices contained within the file:
 
-bc. count  19325571
+bc. $ cat stats.tsv
+count  19325571
 min    5050
 max    54959000
 sum    3078384329109
 mean   159290.730872
 sd     180368.570700
 
-So our file contains a record of more than £3 "trillion":http://en.wikipedia.org/wiki/Trillion transacted over the course of a number of years, but over how many years? We can find out by chopping out the column, removing the month and year and counting the uniquely sorted result:
+That tells us our file contains a record of more than £3 "trillion":http://en.wikipedia.org/wiki/Trillion transacted over the course of a number of years, but over how many years? We can find that out by chopping out the date column, removing the month and year and counting the uniquely sorted result:
 
 bc. $ cut -f2 < data/pp.tsv | sed 's/-.*$//' | sort | uniq | wc -l
 20
 
-People get excited about the likes of "Hadoop":http://en.wikipedia.org/wiki/Apache_Hadoop, but for this kind of hack on this size of file Unix sort is pretty amazing, and fast enough. I guess it's had 40 odd years of computer scientists showing off by optimising the heck out of the "open source code":http://git.savannah.gnu.org/cgit/coreutils.git/tree/src/sort.c. There's an idiom of sort which I use a lot to find the distribution of a data item, for example we can quickly find the busiest days using:
+The standard deviation makes me think the median price would be useful. We can use sort to find that, along with the count of records:
 
-bc. cut -f2 | sort | uniq -c | sort -rn | head
+bc. $ cut -f1 < pp.tsv | sort | sed -n $(expr $(grep count stats.tsv|cut -f2) / 2)p
+265000
 
-I say quickly, but even with the wonder of sort these are quite expensive operations, so let's create indexes by counting all of the columns which I'm sure will come in handy later:
+Judging from enterprisey emails in my inbox, some people are quite excited about "Data Warehousing": and cool things like "Hadoop":http://en.wikipedia.org/wiki/Apache_Hadoop, but for this kind of hackery Unix sort is pretty amazing, and plenty good enough. I guess it's had 40 odd years of computer scientists showing off by optimising the heck out of the "open source code":http://git.savannah.gnu.org/cgit/coreutils.git/tree/src/sort.c. There's an idiom of sort which I use a lot to find the distribution of a data item, for example we can quickly find the busiest days using:
+
+bc. cut -f2 pp.tsv | sort | uniq -c | sort -rn | head
+
+I say quickly, but even with the wonder of sort, counting the occurrences of every value in such a large dataset is a reasonably expensive operation and we're sorting things a lot, so let's create some index files as a one-off activity. I'm sure they'll come in handy later:
 
 bc. while read column title
 do
     cat data/pp.tsv |
-        cut -d' ' -f$column |
+        cut -d'	' -f$column |
         sort |
         uniq -c |
         sort -rn |
         sed -e 's/^ *//' -e 's/  */⋯/g' > $title.tsv
 done <<-!
-1 price
-2 date
-3 postcode
-4 type
-5 new
-6 duration
-7 paon
-8 saon
-9 street
-10 locality
-11 town
-12 district
-13 county
-14 status
+1   price
+2   date
+3   postcode
+4   type
+5   new
+6   duration
+7   paon
+8   saon
+9   street
+10  locality
+11  town
+12  district
+13  county
+14  status
 !
 
-You might like to make some tea whist that happens. You can probably use your laptop to boil the kettle.
+You might like to make some tea whist that happens. You could probably use your laptop to warm the pot.  When it's complete we have a file for each column, allowing us to find the busiest days:
 
-I've gone this far without looking at any particular record. That's because the data contains addresses and it feels to a little strange to highlight someone's residence. Ideally I'd cite somewhere such as "Admiralty Arch":https://www.gov.uk/government/news/government-leases-historic-admiralty-arch or the "Land Registry Head Office":http://www.lse.ac.uk/newsAndMedia/news/archives/2013/04/32LIFOpening.aspx but the dataset "excludes quite a few transactions":https://www.gov.uk/about-the-price-paid-data including those on commercial properties, and leaseholds. That's definitely a thing.
+.bc head date.tsv
+$ head data/date.tsv 
+26299⋯2001-06-29
+26154⋯2002-06-28
+26141⋯2002-05-31
+25454⋯2003-11-28
+24889⋯2007-06-29
+24749⋯2000-06-30
+24146⋯2006-06-30
+24138⋯1999-05-28
+23195⋯2000-03-31
+22870⋯2003-12-19
 
-I was interested in the maximum price paid for a property. Let's look for that one:
+and the most popular prices:
+
+.bc head price.tsv
+208199⋯250000
+185912⋯125000
+163323⋯120000
+159519⋯60000
+147645⋯110000
+145214⋯150000
+140833⋯115000
+134731⋯135000
+131334⋯175000
+131223⋯85000
+
+So that's the "mode":http://en.wikipedia.org/wiki/Mode_(statistics) for each column, and a breakdown of categories such as the number of recorded transactions on new versus old builds:
+
+.bc cat new.tsv
+17351417⋯N
+1974154⋯Y
+
+and the most active postcodes:
+
+.bc head postcode.tsv
+29913⋯
+280⋯TR8⋯4LX
+274⋯CM21⋯9PF
+266⋯B5⋯4TR
+260⋯BS3⋯3NG
+258⋯CM7⋯1WG
+255⋯N7⋯6JT
+253⋯HA1⋯2EX
+248⋯W2⋯6HP
+242⋯M3⋯5AS
+
+Shame the most popular postcode is blank. That could be for legitimate reasons, after all not every parcel of land bought or sold has a postal address. We'll get to that another day.
+
+I've gone this far without looking into any particular record. That's because the data contains addresses and it feels to a little strange to highlight what is after all probably someone's home. Ideally I'd cite somewhere such as "Admiralty Arch":https://www.gov.uk/government/news/government-leases-historic-admiralty-arch or the "Land Registry Head Office":http://www.lse.ac.uk/newsAndMedia/news/archives/2013/04/32LIFOpening.aspx but the dataset "excludes quite a few transactions":https://www.gov.uk/about-the-price-paid-data including those on commercial properties, and leaseholds. That's definitely a thing I should talk to people about.
+
+To be fair and reduce the risk of weirding someone out I need to pick on a property almost at random. I was quite interested in the maximum price paid for a property. Let's look for that one:
 
 bc. $ grep "54959000"  data/pp.tsv
 54959000    2012-03-26  SW10 9SU    S   N   F   20      THE BOLTONS     LONDON  KENSINGTON AND CHELSEA  GREATER LONDON  A
 
-Which is a very large house in Chelsea. No surprise there, but something that is noticeable is how slow the grep command is operating on our large file:
+It's a very large house in Chelsea! No surprise there then. If I was interested I could now go to the Land Registry, pay £3 and find out who lives there, details of others with an interest in the property, a title plan and possibly other restrictions such as any rights of way and if they have to pay to repair the local church spire. This is what "Theodore Burton Fox Ruoff":http://en.wikipedia.org/wiki/HM_Land_Registry called looking behind the curtain.
+
+Anyway, back to the spelunking. Something that is noticeable is how slow that grep command is operating on our large file:
 
 bc. $ time grep "54959000"  data/pp.tsv
 ...
@@ -95,7 +152,7 @@ real    0m30.036s
 user    0m29.130s
 sys 0m0.727s
 
-Which is still quite slow. Literal programming with Unix tools is quick and fun, but I keep forgetting how quick a programming language like awk can be:
+Which is still quite slow. I hope I've shown how literal programming with the Unix pipeline can be quick and fun, but it's easy to forget how quick a programming language can be, even one as simplistic as awk:
 
 bc. $ time awk '$1 == "54959000" { print }' <  data/pp.tsv 
 ...
@@ -103,6 +160,4 @@ real    0m11.475s
 user    0m8.553s
 sys 0m1.086s
 
-I think that's probably enough command line bashing for now.
-
-Statistics are helpful, but it's quite hard to grok the numbers without seeing them laid out, so tomorrow we should draw some graphs.
+With that my lap is suffering from "local warming":, it's very late, and I'm quite tired so I think that's probably enough command line bashing for now.  Statistics are great, but it's quite hard to grok numbers. Tomorrow we should probably draw some graphs.
