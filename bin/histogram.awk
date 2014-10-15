@@ -18,5 +18,5 @@ NR == 1 {
         bar = bar"#";
 
     count = sprintf("(%d)", $1);
-    printf "%-15s %10s %s\n", title, count, bar;
+    printf "%-15.15s %10s %s\n", title, count, bar;
 }

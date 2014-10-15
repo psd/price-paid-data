@@ -1,19 +1,17 @@
 <em>This is day 3 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data</em>
 
-"Yesterday":http://blog.whatfettle.com/2014/10/15/one-csv-thirty-stories-2-counting-things/ we counted the occurrence of values in each column and made some frequency data. Processing the files and writing up the findings took me a bit longer than I'd have liked. Today I've a seat on the train and aim to use my commute home to timebox some quick and dirty histograms. These are a cinch in awk for anyone who grew up playing with BASIC which in my case involved chewing up rolls of paper on my VI form college's teletype link to Teesside Polytechnic's "Univac 1100/60":http://en.wikipedia.org/?title=UNIVAC_1100/60:
+"Yesterday":http://blog.whatfettle.com/2014/10/15/one-csv-thirty-stories-2-counting-things/ we counted the occurrence of values in each column and made some frequency data. Processing the files and writing up the findings took me a bit longer than I'd have liked. Today I've a seat on the train and aim to use my commute home to timebox some quick and dirty histograms. These are a cinch in awk for anyone who grew up playing with BASIC which in my case involved chewing up rolls of paper on my VI form college's teletype link to the "Univac 1100/60":http://en.wikipedia.org/?title=UNIVAC_1100/60 in Teesside Polytechnic:
 
-bc. head -25 price.tsv | awk 'NR == 1 {
+bc. $ head -25 price.tsv | awk 'NR == 1 {
     width = 60
     max = $1;
 }
 {
     title = $2;
     size = width * ($1 / max);
-
     bar = "";
     for (i = 0; i < size; i++)
         bar = bar"#";
-
     count = sprintf("(%d)", $1);
     printf "%-10s %10s %s\n", title, count, bar;
 }'
@@ -46,7 +44,7 @@ bc. 250000            (208199) #################################################
 180000            (111090) ###################################
 65000             (109939) ###################################
 
-Putting this awk script into it's own file @"histogram.awk":https://github.com/psd/price-paid-data/blob/master/bin/histogram.awk@ gives us a command we can use again and again, allowing us to compare new versus old builds:
+Putting this awk script into it's own file "histogram.awk":https://github.com/psd/price-paid-data/blob/master/bin/histogram.awk gives us a command we can use again and again, allowing us to compare new versus old builds:
 
 bc. $ bin/histogram.awk < data/new.tsv
 N          (17351417) ############################################################
@@ -199,15 +197,15 @@ LEEDS             (257632) #####################################################
 BRADFORD          (173120) ########################################
 SHEFFIELD         (155900) ####################################
 MANCHESTER        (154451) ###################################
-CITY⋯OF⋯BRISTOL   (149031) ##################################
+CITY OF BRISTOL   (149031) ##################################
 WANDSWORTH        (134851) ###############################
 KIRKLEES          (131368) ##############################
 LIVERPOOL         (126932) #############################
-EAST RIDING OF YORKSHIRE   (125271) #############################
+EAST RIDING OF YO (125271) #############################
 
 bc. $ head -10 county.tsv  | ../bin/histogram.awk 
 GREATER LONDON   (2520251) #################################################################
-GREATER MANCHESTER   (843778) ######################
+GREATER MANCHESTE (843778) ######################
 WEST MIDLANDS     (739206) ####################
 WEST YORKSHIRE    (733941) ###################
 KENT              (544938) ###############
