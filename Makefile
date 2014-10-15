@@ -14,15 +14,14 @@ stats:	data/stats.tsv
 data/stats.tsv:	data/pp.tsv bin/stats.awk
 	cut -f1 data/pp.tsv | bin/stats.awk > $@
 
-data/pp.tsv:	bin/csv-to-tsv.py
-	@mkdir -p data
-	curl -s $(PP_COMPLETE_URL) | \
-	iconv -f ISO-8859-1 -t UTF-8 | \
-	bin/csv-to-tsv.py | \
-	cut -d'	' -f2- | \
-	sed -e 's/ 00:00//' > data/pp.tsv
+data/pp.tsv:	data/pp-complete.csv bin/csv-to-tsv.py bin/csv-to-tsv.sh
+	bin/csv-to-tsv.sh < data/pp-complete.csv > $@
+
+data/pp-complete.csv:
+	curl -s $(PP_COMPLETE_URL) > $@
 
 bin/csv-to-tsv.py:
+	@mkdir -p data
 	curl -s $(CSV_TO_TSV_URL) > $@
 	chmod +x $@
 
