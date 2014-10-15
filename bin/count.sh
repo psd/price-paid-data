@@ -5,4 +5,4 @@
 sort |
 uniq -c |
 sort -rn |
-sed -e 's/^ *//' -e 's/  */	/g'
+sed -e 's/^ *//' -e 's/  */	/' -e 's/ *$//'
