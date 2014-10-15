@@ -134,7 +134,7 @@ To be fair and reduce the risk of weirding someone out I need to pick on a prope
 bc. $ grep "54959000"  data/pp.tsv
 54959000    2012-03-26  SW10 9SU    S   N   F   20      THE BOLTONS     LONDON  KENSINGTON AND CHELSEA  GREATER LONDON  A
 
-It's a very large house in Chelsea! No surprise there then. If I was interested I could now go to the "Land Registry view title service":https://www.gov.uk/search-property-information-land-registry, pay £3 and find out who lives there, details of others with an interest in the property, a title plan and possibly other restrictions such as any rights of way and if they have to pay to repair the local church spire. This is what "Theodore Burton Fox Ruoff":http://en.wikipedia.org/wiki/HM_Land_Registry called looking behind the curtain.
+It's a very large house in Chelsea! No surprise there then. If I was interested I could now go to the "Land Registry view title service":https://www.gov.uk/search-property-information-land-registry, pay £3 and find out who lives there, details of others with an interest in the property including any mortgage details, a title plan and possibly other restrictions such as any rights of way and if they have to "pay to repair the local church spire":http://en.wikipedia.org/wiki/Chancel_repair_liability. This is what "Theodore Burton Fox Ruoff":http://en.wikipedia.org/wiki/HM_Land_Registry called looking behind the curtain.
 
 Anyway, back to the spelunking. Something that is noticeable is how slow that grep command is operating on our large file:
 
