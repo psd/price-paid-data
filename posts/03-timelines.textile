@@ -1,8 +1,6 @@
-h1. One CSV, 30 stories: #3 Minimal viable histograms
+<em>This is day 3 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data</em>
 
-_This is day 3 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data_
-
-"Yesterday":http://blog.whatfettle.com/2014/10/15/one-csv-thirty-stories-2-counting-things/ we counted the occurrence of values in each column and made some frequency data. Writing up the findings took me a bit longer than I'd have liked. Today I've a seat on the train and aim to use my commute home to timebox some quick and dirty histograms. These are a cinch for anyone who grew up playing with BASIC, in my case chewing up rolls of paper on my VI form college's teletype link to Teesside Polytechnic's "Univac 1100/60":http://en.wikipedia.org/?title=UNIVAC_1100/60:
+"Yesterday":http://blog.whatfettle.com/2014/10/15/one-csv-thirty-stories-2-counting-things/ we counted the occurrence of values in each column and made some frequency data. Processing the files and writing up the findings took me a bit longer than I'd have liked. Today I've a seat on the train and aim to use my commute home to timebox some quick and dirty histograms. These are a cinch in awk for anyone who grew up playing with BASIC which in my case involved chewing up rolls of paper on my VI form college's teletype link to Teesside Polytechnic's "Univac 1100/60":http://en.wikipedia.org/?title=UNIVAC_1100/60:
 
 bc. head -25 price.tsv | awk 'NR == 1 {
     width = 60
@@ -22,7 +20,31 @@ bc. head -25 price.tsv | awk 'NR == 1 {
 
 which gives:
 
-bc. 
+bc. 250000            (208199) #################################################################
+125000            (185912) ###########################################################
+120000            (163323) ###################################################
+60000             (159519) ##################################################
+110000            (147645) ###############################################
+150000            (145214) ##############################################
+115000            (140833) ############################################
+135000            (134731) ###########################################
+175000            (131334) ##########################################
+85000             (131223) #########################################
+130000            (129597) #########################################
+105000            (129336) #########################################
+165000            (126161) ########################################
+95000             (126004) ########################################
+145000            (124379) #######################################
+75000             (123968) #######################################
+140000            (123893) #######################################
+160000            (123451) #######################################
+90000             (123340) #######################################
+100000            (120306) ######################################
+80000             (119776) ######################################
+155000            (115309) ####################################
+185000            (111410) ###################################
+180000            (111090) ###################################
+65000             (109939) ###################################
 
 Putting this awk script into it's own file @"histogram.awk":https://github.com/psd/price-paid-data/blob/master/bin/histogram.awk@ gives us a command we can use again and again, allowing us to compare new versus old builds:
 
@@ -123,7 +145,7 @@ bc. $ head -80 data/price.tsv | bin/histogram.awk
 
 Streets are something worth exploring another day, there's real history in them names:
 
-$ head -20 street.tsv  | ../bin/histogram.awk 
+bc. $ head -20 street.tsv  | ../bin/histogram.awk 
                   (284236) #################################################################
 HIGH STREET       (111407) ##########################
 STATION ROAD       (61918) ###############
@@ -195,4 +217,4 @@ SURREY            (450990) ############
 LANCASHIRE        (435968) ############
 HERTFORDSHIRE     (426834) ############
 
-Time's up! Tomorrow we make timelines and dig more deeply into those prices.
+Time's up! Tomorrow we should make some timelines and dig more deeply into those prices.
