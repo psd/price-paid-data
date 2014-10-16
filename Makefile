@@ -4,9 +4,19 @@ CSV_TO_TSV_URL=https://raw.githubusercontent.com/clarkgrubb/data-tools/master/sr
 .DELETE_ON_ERROR:
 .PHONY: makefiles
 
-all:	counts stats
+all:	counts stats images
 
 stats:	data/stats.tsv
+
+images:	out/scatterps.png
+
+out/scatterps.png:	data/prices.tsv
+	@mkdir -p out
+	bin/scatterps.sh < data/prices.tsv | \
+		convert -density 300 - $@
+
+data/prices.tsv:	data/pp.tsv
+	awk -F'	' '{print $$2"	"$$1}' < data/pp.tsv | sort > $@
 
 # bootstrap by make makefiles
 -include makefiles/counts.mk
