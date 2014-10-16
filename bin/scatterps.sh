@@ -8,7 +8,7 @@ cat <<!
     1 0 360 arc fill
 } def
 !
-awk -F'	' -v max=10000000 '
+awk -F'	' -v max=15000000 '
     function epoch(s) {
         gsub(/[:-]/, " ", s);
         s = s " 00 00 00"
@@ -22,6 +22,6 @@ awk -F'	' -v max=10000000 '
         this = epoch($1) - first;
         x = 600 * this / last;
         y = 600 * $2 / max;
-        printf "%d %d p\n", x + 50, y + 50;
+        printf "%d %d p\n", x, y;
     }'
 echo showpage
