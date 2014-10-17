@@ -1,12 +1,19 @@
 #!/bin/sh
 
+width=1000
+height=1000
+
 cat <<-!
-viewbox 0 0 1000 1000   fill white  rectangle 0,0 1000 1000
+viewbox 0 0 1000 1000   fill white  rectangle 0,0 $width $height
 fill black
 fill-opacity 0.2 
 !
-
-awk -F'	' -v max=15000000 '
+awk -F'	' \
+    -v max=15000000 \
+    -v radius=5 \
+    -v width=$width \
+    -v height=$height \
+'
     function epoch(s) {
         gsub(/[:-]/, " ", s);
         s = s " 00 00 00"
@@ -18,7 +25,8 @@ awk -F'	' -v max=15000000 '
     }
     {
         this = epoch($1) - first;
-        x = 1000 * this / last;
-        y = 1000 - (1000 * $2 / max);
-        printf "circle %d,%d,%d,%d\n", x, y, x+1, y+1;
-    }' 
+        x = width * this / last;
+        y = height - (height * $2 / max);
+        printf "circle %d,%d,%d,%d\n", x, y, x+radius, y+radius;
+    }
+'
