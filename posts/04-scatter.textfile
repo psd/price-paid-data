@@ -1,0 +1,70 @@
+<em>This is day 4 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data</em>
+
+I had some feedback after "yesterday":http://blog.whatfettle.com/2014/10/15/one-csv-30-stories-3-minimal-viable-histograms/ mostly from people enjoying my low-tech approach, which was nice. Today I wanted to look at the price paid for property. All 19 million prices on one page, to see if there are any apparent trends in the data.
+
+To do this we only need the date and the price columns, and we might as well sort them by day as I'm pretty sure that'll be useful later:
+
+bc. awk -F'⋯' '{print $2 "⋯" $1}' < data/pp.tsv | sort > prices.tsv
+
+Now to make a scatter plot of our prices with time on the x-axis, and the price paid on the y-axis. We'll use an awk script to do this:
+
+bc. cat prices.tsv | {
+cat <<!
+%!
+%%Orientation: Landscape
+%%Page: 1 1
+0 0 0 setrgbcolor
+/p {
+    1 0 360 arc fill
+} def
+!
+awk -F'	' -v max=15000000 '
+    function epoch(s) {
+        gsub(/[:-]/, " ", s);
+        s = s " 00 00 00"
+        return mktime(s);
+    }
+    NR == 1 {
+        first = epoch($1);
+        last = systime() - first;
+    }
+    {
+        this = epoch($1) - first;
+        x = 600 * this / last;
+        y = 600 * $2 / max;
+        printf "%d %d p\n", x, y;
+    }'
+echo showpage
+}
+
+to generate a big "PostScript":http://en.wikipedia.org/wiki/PostScript document:
+
+bc. %!
+%%Orientation: Landscape
+%%Page: 1 1
+0 0 0 setrgbcolor
+/p {
+    1 0 360 arc fill
+} def
+0 4 p
+0 0 p
+   ... [19 million lines removed] ...
+595 3 p
+595 13 p
+showpage
+
+back in the day you'd attach a laser printer to the parallel port of your server and @cat prices.ps > /dev/lp@ to see the result but these days we have a raft of ways of viewing the output of process the PostScript. Most anything that can render a PDF can usually also run the older PostScript language — it's a little bit weird how we bat executable programs back and forth when we're exchanging text and images. Just to emphasise the capacity for mischief, the generated 1.5Gig PostScript reliably crashes the Mac preview application on my laptop, so I used the open source "ImageMagick":http://www.imagemagick.org/ to make a portable image file:
+
+bc. scatterps.sh < data/prices.tsv | convert -density 300 - out.png
+
+!https://raw.githubusercontent.com/psd/price-paid-data/master/out/scatterps.png!
+
+This image is intriguing, but we should be able to differentiate the density of points if we make them slightly transparent. PostScript is notoriously poor at rendering opacity, but luckily ImageMagick has its own drawing language which makes png files directly and it's fairly straightforward to "tweak the awk":https://github.com/psd/price-paid-data/blob/master/bin/scatterim.sh to generate "MVG":http://www.imagemagick.org/Usage/draw/ for the bitmap:
+
+!https://raw.githubusercontent.com/psd/price-paid-data/master/out/scatterim.png!
+
+We can see from this a general, apparently slow trend in the bulk of house prices, with seasonal and a marked dip at what looks like 2005. There's also a strange vertical band towards the left which I can't explain, yet. Interestingly you can just see horizontal bands which as "Stephen pointed out":https://twitter.com/scedwar/status/522327111865237504 are likely to be skips around the "stamp duty bands":http://www.stampdutyrates.co.uk/historic-rates.html.
+
+So there's a few stories to delve into.
+
+I completely mismanaged my time writing this post, so will leave adding axis to the graphs until tomorrow.
