@@ -1,10 +1,10 @@
 #!/bin/sh
 
-width=1000
+width=2000
 height=1000
 
 cat <<-!
-viewbox 0 0 1000 1000   fill white  rectangle 0,0 $width $height
+viewbox 0 0 $width $height fill transparent rectangle 0,0 $width $height
 fill black
 fill-opacity 0.2 
 !
