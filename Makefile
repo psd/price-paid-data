@@ -6,34 +6,46 @@ CSV_TO_TSV_URL=https://raw.githubusercontent.com/clarkgrubb/data-tools/master/sr
 
 all:	counts stats images
 
-stats:	data/stats.tsv
+images:	out/scatterps.png out/scatterim.png
 
-images:	out/scatterps.png
+# use ImageMagick to make a scatter plot
+out/scatterim.png:	data/prices.tsv bin/scatterim.sh
+	@mkdir -p out
+	bin/scatterim.sh < data/prices.tsv | \
+		convert mvg:- $@
 
-out/scatterps.png:	data/prices.tsv
+# use Postscript to make a scatter plot
+out/scatterps.png:	data/prices.tsv bin/scatterps.sh
 	@mkdir -p out
 	bin/scatterps.sh < data/prices.tsv | \
 		convert -density 300 - $@
 
+# timeline of prices
 data/prices.tsv:	data/pp.tsv
 	awk -F'	' '{print $$2"	"$$1}' < data/pp.tsv | sort > $@
 
-# bootstrap by make makefiles
--include makefiles/counts.mk
+stats:	data/stats.tsv
 
+# basic price-paid statistics
 data/stats.tsv:	data/pp.tsv bin/stats.awk
 	cut -f1 data/pp.tsv | bin/stats.awk > $@
 
+# convert CSV to TSV
 data/pp.tsv:	data/pp-complete.csv bin/csv-to-tsv.py bin/csv-to-tsv.sh
 	bin/csv-to-tsv.sh < data/pp-complete.csv > $@
 
+# download price paid dataset
 data/pp-complete.csv:
 	curl -s $(PP_COMPLETE_URL) > $@
 
+# install CSV to TSV conveter
 bin/csv-to-tsv.py:
 	@mkdir -p data
 	curl -s $(CSV_TO_TSV_URL) > $@
 	chmod +x $@
+
+# count the occurrence of each value for each row
+-include makefiles/counts.mk
 
 makefiles: makefiles/counts.mk
 
