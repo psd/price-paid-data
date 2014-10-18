@@ -1,18 +1,54 @@
 #!/bin/sh
 
+#
+#  create ImageMagick MVP commands for a scatterplot from a TSV timeseries
+#  YYYY-MM-DD PRICE .. ..
+#
+
+#
+#  command line options
+#
+usage() {
+    echo "usage: $(basename $0) [-w width] [-h height] [-r radius] [-c color ] [-o opacity] [-m maximum]" >&2
+    exit 1
+}
+
 width=2000
 height=1000
+radius=5
+color=black
+opacity=0.2
+max=15000000
 
+while getopts w:h:r:c:o:m: opt; do
+  case $opt in
+  w) width=$OPTARG ;;
+  h) height=$OPTARG ;;
+  r) radius=$OPTARG ;;
+  c) color=$OPTARG ;;
+  o) opacity=$OPTARG ;;
+  m) max=$OPTARG ;;
+  \?) usage ;;
+  esac
+done
+
+#
+#  set up the canvas
+#
 cat <<-!
 viewbox 0 0 $width $height fill transparent rectangle 0,0 $width $height
-fill black
-fill-opacity 0.2 
+fill $color
+fill-opacity $opacity
 !
+
+#
+#  draw points
+#
 awk -F'	' \
-    -v max=15000000 \
-    -v radius=5 \
     -v width=$width \
     -v height=$height \
+    -v radius=$radius \
+    -v max=$max \
 '
     function epoch(s) {
         gsub(/[:-]/, " ", s);
