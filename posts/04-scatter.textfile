@@ -59,7 +59,7 @@ bc. scatterps.sh < data/prices.tsv | convert -density 300 - out.png
 
 !https://raw.githubusercontent.com/psd/price-paid-data/master/out/scatterps.png!
 
-This image is intriguing, but we should be able to differentiate the density of points if we make them slightly transparent. PostScript is notoriously poor at rendering opacity, but luckily ImageMagick has its own drawing language which makes png files directly and it's fairly straightforward to "tweak the awk":https://github.com/psd/price-paid-data/blob/master/bin/scatterim.sh to generate "MVG":http://www.imagemagick.org/Usage/draw/ for the bitmap:
+This image is intriguing, but we should be able to differentiate the density of points if we make them slightly transparent. PostScript is notoriously poor at rendering opacity, but luckily ImageMagick has its own drawing language which makes png files directly and it's fairly straightforward to "tweak the awk":https://github.com/psd/price-paid-data/blob/master/bin/scatterim.sh to generate "MVG":http://www.imagemagick.org/Usage/draw/:
 
 !https://raw.githubusercontent.com/psd/price-paid-data/master/out/scatterim.png!
 
