@@ -5,4 +5,7 @@ The code and microsite for "One CSV, 30 stories":http://blog.whatfettle.com/2014
 bc. $ make
 
 Depends upon:
-    * http://www.imagemagick.org/
+
+* http://www.imagemagick.org/
+* http://optipng.sourceforge.net/
+* http://www.gnuplot.info/

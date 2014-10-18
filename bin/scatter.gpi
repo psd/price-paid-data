@@ -1,0 +1,20 @@
+#!/usr/bin/env gnuplot
+
+set terminal png font "helvetica,14" size 1600,1200 transparent truecolor
+set output "/dev/stdout"
+set key off
+
+set xlabel "Date"
+set xdata time
+set timefmt "%Y-%m-%d"
+set xrange ["1994-10-01":"2015-01-01"]
+set format x "%Y"
+
+set ylabel "Price paid (£)"
+set yrange [0:300000]
+set format y "%.0s%c"
+
+set style circle radius 100
+
+plot "/dev/stdin" using 1:2 \
+    with circles lc rgb "black" fs transparent solid 0.01 noborder

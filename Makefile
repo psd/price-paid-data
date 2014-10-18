@@ -4,9 +4,26 @@ CSV_TO_TSV_URL=https://raw.githubusercontent.com/clarkgrubb/data-tools/master/sr
 .DELETE_ON_ERROR:
 .PHONY: makefiles
 
+#
+#  the dependency chain will emerge
+#
 all:	counts stats images
 
-images:	out/scatterps.png out/scatterim.png
+#
+#  images
+#
+IMAGES=\
+	out/scatterps.png \
+	out/scatterim.png \
+	out/scattergpi.png
+
+images:	$(IMAGES)
+
+# use gnuplot  to make a scatter plot
+out/scattergpi.png:	data/prices.tsv bin/scatter.gpi
+	@mkdir -p out
+	bin/scatter.gpi < data/prices.tsv > $@
+	optipng $@
 
 # use ImageMagick to make a scatter plot
 out/scatterim.png:	data/prices.tsv bin/scatterim.sh
@@ -22,7 +39,9 @@ out/scatterps.png:	data/prices.tsv bin/scatterps.sh
 		convert -density 300 - $@
 	optipng $@
 
-# timeline of prices
+#
+#  stats
+#
 data/prices.tsv:	data/pp.tsv
 	awk -F'	' '{print $$2"	"$$1}' < data/pp.tsv | sort > $@
 
@@ -46,7 +65,9 @@ bin/csv-to-tsv.py:
 	curl -s $(CSV_TO_TSV_URL) > $@
 	chmod +x $@
 
-# count the occurrence of each value for each row
+#
+#  counts
+#
 -include makefiles/counts.mk
 
 makefiles: makefiles/counts.mk
