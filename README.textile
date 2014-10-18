@@ -1,6 +1,6 @@
 h1. One CSV, thirty stories.
 
-Thirty stories about the Land Registry price paid open data set.
+The code and microsite for "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK.
 
 bc. $ make
 
