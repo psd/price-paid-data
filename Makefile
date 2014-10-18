@@ -13,12 +13,14 @@ out/scatterim.png:	data/prices.tsv bin/scatterim.sh
 	@mkdir -p out
 	bin/scatterim.sh < data/prices.tsv | \
 		convert mvg:- $@
+	optipng $@
 
 # use Postscript to make a scatter plot
 out/scatterps.png:	data/prices.tsv bin/scatterps.sh
 	@mkdir -p out
 	bin/scatterps.sh < data/prices.tsv | \
 		convert -density 300 - $@
+	optipng $@
 
 # timeline of prices
 data/prices.tsv:	data/pp.tsv
