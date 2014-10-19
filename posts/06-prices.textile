@@ -1,0 +1,37 @@
+<em>This is day 6 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data</em>
+
+I was confident today was going to be "Talk like a statistician day" but my laptop was tied up for most of it whilst Yosemite installed itself, meaning I didn't have time to play with "R":http://www.r-project.org/ after all.  Instead let's continue to dig into how property is priced.
+
+We saw in "yesterday's":http://blog.whatfettle.com/2014/10/18/one-csv-thirty-stories-5-axes/ scatter plots how prices clump around integer values, and then skip around where stamp duty kicks in, £60k in this section:
+
+<a href="https://www.flickr.com/photos/psd/15552845326" title="Zooming in on the prices scatterplot by Paul Downey, on Flickr"><img src="https://farm4.staticflickr.com/3955/15552845326_64874751ac_b.jpg" width="1024" height="768" alt="Zooming in on the prices scatterplot"></a>
+
+Using "gnuplot":http://gnuplot.sourceforge.net/ to make another scatter plot, this time using the price 
+
+bc.  #!/usr/bin/env gnuplot
+set terminal png font "helvetica,14" size 1600,1200 transparent truecolor
+set output "/dev/stdout"
+set key off
+set xlabel "Price paid (£)"
+set xrange [0:1500000]
+set format x "%.0s%c"
+set ylabel "Number of transactions"
+set yrange [0:150000]
+set format y "%.0s%c"
+set style circle radius 4500
+plot "/dev/stdin" using 2:1 \
+    with circles lc rgb "black" \
+    fs transparent \
+    solid 0.5 noborder
+
+bc. $ price.gpi < price.tsv > price.png
+
+<a href="https://www.flickr.com/photos/psd/15553713136" title="Transactions by price by Paul Downey, on Flickr"><img src="https://farm4.staticflickr.com/3943/15553713136_1cb4138108_b.jpg" width="1024" height="768" alt="Transactions by price"></a>
+
+Maybe the same plot with boxes will be clearer:
+
+bc.  plot "/dev/stdin" using 2:1 with boxes lc rgb "black"
+
+<a href="https://www.flickr.com/photos/psd/15391624897" title="Frequency of prices by Paul Downey, on Flickr"><img src="https://farm6.staticflickr.com/5610/15391624897_d63dcc8280_b.jpg" width="1024" height="768" alt="Frequency of prices"></a>
+
+So even more confirmation that people price their houses at preferring whole numbers and multiples of 10, and market them either just below a stamp duty band or some way beyond it. The interference lines at the lower prices look interesting. More on that tomorrow.

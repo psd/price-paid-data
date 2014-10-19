@@ -15,24 +15,44 @@ all:	counts stats images
 IMAGES=\
 	out/scatterps.png \
 	out/scatterim.png \
-	out/scattergpi.png
+	out/scattergpi.png \
+	out/scatterzoom.png \
+	out/price.png \
+	out/pricefreq.png
 
 images:	$(IMAGES)
 
-# use gnuplot  to make a scatter plot
+# gnuplot price (v) number sold histogram
+out/pricefreq.png:	data/price.tsv bin/pricefreq.gpi
+	@mkdir -p out
+	bin/pricefreq.gpi < data/price.tsv > $@
+	optipng $@
+
+# gnuplot price (v) number sold scatter plot
+out/price.png:	data/price.tsv bin/price.gpi
+	@mkdir -p out
+	bin/price.gpi < data/price.tsv > $@
+	optipng $@
+
+# gnuplot scatter plot
 out/scattergpi.png:	data/prices.tsv bin/scatter.gpi
 	@mkdir -p out
 	bin/scatter.gpi < data/prices.tsv > $@
 	optipng $@
 
-# use ImageMagick to make a scatter plot
+out/scatterzoom.png:	data/prices.tsv bin/scatterzoom.gpi
+	@mkdir -p out
+	bin/scatterzoom.gpi < data/prices.tsv > $@
+	optipng $@
+
+# ImageMagick scatter plot
 out/scatterim.png:	data/prices.tsv bin/scatterim.sh
 	@mkdir -p out
 	bin/scatterim.sh < data/prices.tsv | \
 		convert mvg:- $@
 	optipng $@
 
-# use Postscript to make a scatter plot
+# Postscript scatter plot
 out/scatterps.png:	data/prices.tsv bin/scatterps.sh
 	@mkdir -p out
 	bin/scatterps.sh < data/prices.tsv | \

@@ -1,0 +1,20 @@
+#!/usr/bin/env gnuplot
+
+set terminal png font "helvetica,14" size 1600,1200 transparent truecolor
+set output "/dev/stdout"
+set key off
+
+set xlabel "Price paid (£)"
+set xrange [0:1500000]
+set format x "%.0s%c"
+
+set ylabel "Number of transactions"
+set yrange [0:150000]
+set format y "%.0s%c"
+
+set style circle radius 4500
+
+plot "/dev/stdin" using 2:1 \
+    with circles lc rgb "black" \
+    fs transparent \
+    solid 0.5 noborder
