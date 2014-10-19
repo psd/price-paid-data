@@ -6,7 +6,7 @@ We saw in "yesterday's":http://blog.whatfettle.com/2014/10/18/one-csv-thirty-sto
 
 <a href="https://www.flickr.com/photos/psd/15552845326" title="Zooming in on the prices scatterplot by Paul Downey, on Flickr"><img src="https://farm4.staticflickr.com/3955/15552845326_64874751ac_b.jpg" width="1024" height="768" alt="Zooming in on the prices scatterplot"></a>
 
-Using "gnuplot":http://gnuplot.sourceforge.net/ to make another scatter plot, this time using the price 
+I didn't have much time, so grabbed "gnuplot":http://gnuplot.sourceforge.net/ again to make another scatter plot, this time using the prices file we made on "Day 2":http://blog.whatfettle.com/2014/10/15/one-csv-thirty-stories-2-counting-things/: 
 
 bc.  #!/usr/bin/env gnuplot
 set terminal png font "helvetica,14" size 1600,1200 transparent truecolor
@@ -26,7 +26,7 @@ plot "/dev/stdin" using 2:1 \
 
 bc. $ price.gpi < price.tsv > price.png
 
-<a href="https://www.flickr.com/photos/psd/15553713136" title="Transactions by price by Paul Downey, on Flickr"><img src="https://farm4.staticflickr.com/3943/15553713136_1cb4138108_b.jpg" width="1024" height="768" alt="Transactions by price"></a>
+<a href="https://www.flickr.com/photos/psd/15553713136" title="Transactions by price by Paul Downey, on Flickr"><img src="https://farm4.staticflickr.com/3943/15553713136_eafb811b30_b.jpg" width="1024" height="768" alt="Transactions by price"></a>
 
 Maybe the same plot with boxes will be clearer:
 
@@ -34,4 +34,4 @@ bc.  plot "/dev/stdin" using 2:1 with boxes lc rgb "black"
 
 <a href="https://www.flickr.com/photos/psd/15391624897" title="Frequency of prices by Paul Downey, on Flickr"><img src="https://farm6.staticflickr.com/5610/15391624897_d63dcc8280_b.jpg" width="1024" height="768" alt="Frequency of prices"></a>
 
-So even more confirmation that people price their houses at preferring whole numbers and multiples of 10, and market them either just below a stamp duty band or some way beyond it. The interference lines at the lower prices look interesting. More on that tomorrow.
+So even more confirmation that people prefer whole numbers and multiples of 10 when pricing houses, and market them either just below a stamp duty band or some way beyond it. The interference lines at the lower prices look interesting. More on that tomorrow.
