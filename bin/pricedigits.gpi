@@ -1,0 +1,20 @@
+#!/usr/bin/env gnuplot
+
+set terminal png font "helvetica,14" size 1600,1200 transparent truecolor
+set output "/dev/stdout"
+set key off
+
+set boxwidth 1 absolute
+set style fill solid 1.0
+set xzeroaxis linetype 0 linewidth 1.000
+set yzeroaxis linetype 0 linewidth 1.000
+
+set xlabel "Price (£) lower digits"
+set xrange [0:*]
+set format x "%.0s%c"
+
+set ylabel "Number of transactions"
+set yrange [0:*]
+set format y "%.01s%c"
+
+plot "/dev/stdin" using 2:1 with boxes lc rgb "black"

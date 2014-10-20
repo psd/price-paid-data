@@ -1,0 +1,19 @@
+#!/usr/bin/env gnuplot
+
+set terminal png font "helvetica,14" size 1600,1200 transparent truecolor
+set output "/dev/stdout"
+set key off
+
+set boxwidth 1 absolute
+set style fill solid 1.0
+set xzeroaxis linetype 0 linewidth 1.000
+set yzeroaxis linetype 0 linewidth 1.000
+
+set xlabel "Rank"
+set xrange [0:1000]
+
+set ylabel "Number of transactions"
+set yrange [0:210000]
+set format y "%.01s%c"
+
+plot "/dev/stdin" using 0:1 with boxes lc rgb "black"

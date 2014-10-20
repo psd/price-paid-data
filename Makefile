@@ -18,9 +18,44 @@ IMAGES=\
 	out/scattergpi.png \
 	out/scatterzoom.png \
 	out/price.png \
-	out/pricefreq.png
+	out/pricefreq.png \
+	out/pricerank.png \
+	out/pricetens.png \
+	out/pricehundreds.png \
+	out/pricethousands.png \
+	out/pricelog.png
 
 images:	$(IMAGES)
+
+# gnuplot price lower digits 1000
+out/pricelog.png:	data/pricethousands.tsv bin/pricedigits.gpi
+	@mkdir -p out
+	bin/pricelog.gpi < data/pricethousands.tsv > $@
+	optipng $@
+
+# gnuplot price lower digits 1000
+out/pricethousands.png:	data/pricethousands.tsv bin/pricedigits.gpi
+	@mkdir -p out
+	bin/pricedigits.gpi < data/pricethousands.tsv > $@
+	optipng $@
+
+# gnuplot price lower digits 100
+out/pricehundreds.png:	data/pricehundreds.tsv bin/pricedigits.gpi
+	@mkdir -p out
+	bin/pricedigits.gpi < data/pricehundreds.tsv > $@
+	optipng $@
+
+# gnuplot price lower digits 10
+out/pricetens.png:	data/pricetens.tsv bin/pricedigits.gpi
+	@mkdir -p out
+	bin/pricedigits.gpi < data/pricetens.tsv > $@
+	optipng $@
+
+# gnuplot price rank
+out/pricerank.png:	data/price.tsv bin/pricerank.gpi
+	@mkdir -p out
+	bin/pricerank.gpi < data/price.tsv > $@
+	optipng $@
 
 # gnuplot price (v) number sold histogram
 out/pricefreq.png:	data/price.tsv bin/pricefreq.gpi
@@ -62,6 +97,15 @@ out/scatterps.png:	data/prices.tsv bin/scatterps.sh
 #
 #  stats
 #
+data/pricetens.tsv:	data/pp.tsv
+	cut -f1 < data/pp.tsv | awk '{ print $$1 % 10 }' | bin/count.sh > $@
+
+data/pricehundreds.tsv:	data/pp.tsv
+	cut -f1 < data/pp.tsv | awk '{ print $$1 % 100 }' | bin/count.sh > $@
+
+data/pricethousands.tsv:	data/pp.tsv
+	cut -f1 < data/pp.tsv | awk '{ print $$1 % 10000 }' | bin/count.sh > $@
+
 data/prices.tsv:	data/pp.tsv
 	awk -F'	' '{print $$2"	"$$1}' < data/pp.tsv | sort > $@
 
