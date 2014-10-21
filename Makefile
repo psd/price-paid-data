@@ -23,12 +23,13 @@ IMAGES=\
 	out/pricetens.png \
 	out/pricehundreds.png \
 	out/pricethousands.png \
-	out/pricelog.png
+	out/pricelog.png \
+	out/priceheat.png
 
 images:	$(IMAGES)
 
 # gnuplot price lower digits 1000
-out/pricelog.png:	data/pricethousands.tsv bin/pricedigits.gpi
+out/pricelog.png:	data/pricethousands.tsv bin/pricelog.gpi
 	@mkdir -p out
 	bin/pricelog.gpi < data/pricethousands.tsv > $@
 	optipng $@
