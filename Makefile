@@ -28,6 +28,12 @@ IMAGES=\
 
 images:	$(IMAGES)
 
+# gnuplot price heatmap
+out/priceheat.png:	data/priceheat.tsv bin/priceheat.gpi
+	@mkdir -p out
+	bin/priceheat.gpi < data/priceheat.tsv > $@
+	optipng $@
+
 # gnuplot price lower digits 1000
 out/pricelog.png:	data/pricethousands.tsv bin/pricelog.gpi
 	@mkdir -p out
@@ -98,6 +104,9 @@ out/scatterps.png:	data/prices.tsv bin/scatterps.sh
 #
 #  stats
 #
+data/priceheat.tsv:	data/prices.tsv bin/priceheat.awk
+	bin/priceheat.awk < data/prices.tsv > $@
+
 data/pricetens.tsv:	data/pp.tsv
 	cut -f1 < data/pp.tsv | awk '{ print $$1 % 10 }' | bin/count.sh > $@
 
