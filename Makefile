@@ -24,9 +24,16 @@ IMAGES=\
 	out/pricehundreds.png \
 	out/pricethousands.png \
 	out/pricelog.png \
-	out/priceheat.png
+	out/priceheat.png \
+	out/yearly.png
 
 images:	$(IMAGES)
+
+# gnuplot price yearly histogram
+out/yearly.png:	data/yearly.tsv bin/yearly.gpi
+	@mkdir -p out
+	bin/yearly.gpi < data/yearly.tsv > $@
+	optipng $@
 
 # gnuplot price heatmap
 out/priceheat.png:	data/priceheat.tsv bin/priceheat.gpi
@@ -107,6 +114,11 @@ out/scatterps.png:	data/prices.tsv bin/scatterps.sh
 data/priceheat.tsv:	data/prices.tsv bin/priceheat.awk
 	bin/priceheat.awk < data/prices.tsv > $@
 
+# count transactions per-year
+data/yearly.tsv:	data/pp.tsv
+	cut -f2 < data/pp.tsv | sed 's/-.*//' | sort | uniq -c | awk '{print $$2 "	" $$1}' > $@
+
+# count price bands
 data/pricetens.tsv:	data/pp.tsv
 	cut -f1 < data/pp.tsv | awk '{ print $$1 % 10 }' | bin/count.sh > $@
 

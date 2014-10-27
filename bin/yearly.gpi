@@ -1,0 +1,16 @@
+#!/usr/bin/env gnuplot
+
+set terminal png font "helvetica,14" size 1600,1200 transparent truecolor
+set output "/dev/stdout"
+set key off
+
+set style data histogram
+set style fill solid border
+
+set ylabel "Number of transactions"
+set format y "%.01s%c"
+set yrange[0:*]
+
+set xlabel "Year"
+
+plot "/dev/stdin" using 2:xtic(1) lc rgb "black"

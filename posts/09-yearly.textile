@@ -1,0 +1,53 @@
+<em>This is day 9 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data</em>
+
+I'd declared "yesterday's post":http://blog.whatfettle.com/2014/10/25/one-csv-thirty-stories-8-heatmap-meh/ a bit meh, but on reflection it highlighted an interesting anomaly, an intensification of the number of transactions around the £250k price-point, but how does that relate to the overall number of transactions?
+
+We can quickly crate a list of the number of transactions per-year by cutting the date from the price-paid CSV, stripping off the @-MM-DD@ part anc counting 
+
+bc.  cut -f2 < pp.tsv |
+	sed 's/-.*//' |
+	sort |
+	uniq -c |
+	awk '{print $2 "⋯" $1}'
+
+bc. 1995	766098
+1996	930498
+1997	1061710
+1998	1027447
+1999	1177016
+2000	1114549
+2001	1231181
+2002	1337684
+2003	1246935
+2004	1261448
+2005	1052475
+2006	1315598
+2007	1262214
+2008	644178
+2009	619394
+2010	657886
+2011	655603
+2012	654353
+2013	792356
+2014	516948
+
+Turning once again to gnuplot, our current hammer of choice. The following script:
+
+bc. set terminal png font "helvetica,14" size 1600,1200 transparent truecolor
+set output "/dev/stdout"
+set key off
+set style data histogram
+set style fill solid border
+set ylabel "Number of transactions"
+set format y "%.01s%c"
+set yrange[0:*]
+set xlabel "Year"
+plot "/dev/stdin" using 2:xtic(1) lc rgb "black"
+
+turns the figures into a histogram:
+
+[TBD: FLICKR!]
+
+Which illustrates how the increasing intensity of yesterday's heatmap at the lower price bands comes at a time when the volume of transactions are half of their peak. This is either an interesting lead, or raises questions over how the data is collated.
+
+This isn't the post I worked on today, and I think changes the direction of "tomorrow"'s post. That's my being agile, innit?
