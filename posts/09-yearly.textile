@@ -2,7 +2,7 @@
 
 I'd declared "yesterday's post":http://blog.whatfettle.com/2014/10/25/one-csv-thirty-stories-8-heatmap-meh/ a bit meh, but on reflection it highlighted an interesting anomaly, an intensification of the number of transactions around the £250k price-point, but how does that relate to the overall number of transactions?
 
-We can quickly crate a list of the number of transactions per-year by cutting the date from the price-paid CSV, stripping off the @-MM-DD@ part anc counting 
+We can quickly crate a list of the number of transactions per-year by cutting the date from the price-paid CSV, stripping off the @-MM-DD@ part and counting the number of lines for each year:
 
 bc.  cut -f2 < pp.tsv |
 	sed 's/-.*//' |
