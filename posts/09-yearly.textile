@@ -46,8 +46,8 @@ plot "/dev/stdin" using 2:xtic(1) lc rgb "black"
 
 turns the figures into a histogram:
 
-[TBD: FLICKR!]
+<a href="https://www.flickr.com/photos/psd/15465968598" title="Number of transactions by year by Paul Downey, on Flickr"><img src="https://farm4.staticflickr.com/3937/15465968598_3b8a86c9bc_c.jpg" width="800" height="600" alt="Number of transactions by year"></a>
 
 Which illustrates how the increasing intensity of yesterday's heatmap at the lower price bands comes at a time when the volume of transactions are half of their peak. This is either an interesting lead, or raises questions over how the data is collated.
 
-This isn't the post I worked on today, and I think changes the direction of "tomorrow"'s post. That's my being agile, innit?
+This isn't the post I worked on today, and changes the direction of "tomorrow"'s post. That's my being agile, innit?
