@@ -12,8 +12,8 @@ Something else I've carried with me came directly from my boss at the time, Mike
 
 Given my time with the likes of Prolog, SAVOIR and "SAS":http://en.wikipedia.org/wiki/SAS_(software), and my long love of APL, I'm rather surprised to be finding "R":http://en.wikipedia.org/wiki/R_(programming_language) heavy going. Here's a hello-word plot of prices:
 
-bc.  &gt; prices <- read.csv("data/prices.tsv", sep="⋯")
-&gt; plot(prices[,1])
+bc. prices <- read.csv("data/prices.tsv", sep="⋯")
+plot(prices[,1])
 
 <a href="https://www.flickr.com/photos/psd/15057749553" title="R prices"><img src="https://farm6.staticflickr.com/5601/15057749553_3406f2e7a2_z.jpg" width="640" height="607" alt="R prices"></a>
 
