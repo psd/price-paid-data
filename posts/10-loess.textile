@@ -49,4 +49,4 @@ bc. scatter.smooth(prices[,1], prices[,2], degree=2, col="#c8c8c8", span=0.5, yl
 
 basically showing prices rising gradually with a steeper build up before 2009. I could spend time "tomorrow" improving this plot, but first I think I need to grab some of the low-hanging fruit to overcome my now 8 post deficit.
 
-<span id="†">†</span><em>I'm now bothered by that description because my time spent with Pam was brilliant and I think I'm now close to her age when we shared an office.</em>
+<span id="†">†</span><em>I'm now bothered by that memory of her because my time spent with Pam was brilliant and I think I'm now close to her age when we shared an office.</em>
