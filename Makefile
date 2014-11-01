@@ -25,9 +25,16 @@ IMAGES=\
 	out/pricethousands.png \
 	out/pricelog.png \
 	out/priceheat.png \
-	out/yearly.png
+	out/yearly.png \
+	out/pricesmooth.png
 
 images:	$(IMAGES)
+
+# R smooth LOESS curve
+out/pricesmooth.png:	data/prices.tsv bin/pricesmooth.R
+	@mkdir -p out
+	bin/pricesmooth.R
+	optipng $@
 
 # gnuplot price yearly histogram
 out/yearly.png:	data/yearly.tsv bin/yearly.gpi

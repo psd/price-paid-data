@@ -1,0 +1,52 @@
+<em>This is day 10 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data</em>
+
+It's been a few days since "yesterday's post": in part because I've been away canal boating without much access to the Internet, but mostly because I spent the time I had literally off in the weeds. It seems I frittered what little time I had for this project exploring statistical techniques to try and make more sense of the prices.
+
+A week away has also put me in something a reflective mood. Playing with statistics reminded me of my time as a University placement working in an "operational research":http://en.wikipedia.org/wiki/Operations_research team at "ICI":http://en.wikipedia.org/wiki/Imperial_Chemical_Industries in the 1980s. I learnt a lot of things during that year sharing an office with an elderly statistician<a href=#†">†</a>, but above all else, how statistics is an art form in that art is required to use statistics to tell stories.
+
+<a href="https://www.flickr.com/photos/psd/33877019" title="ICI Mond Division 1984 by Paul Downey, on Flickr"><img src="https://farm1.staticflickr.com/23/33877019_6bf2cd0f39_z.jpg" width="640" height="375" alt="ICI Mond Division 1984"></a>
+
+Something else I've carried with me came directly from my boss at the time, Mike Taylor. I really couldn't have asked for a better sponsor for my "industrial training", someone who really understood the value of using a multiplicity of tools, instilling into me the Marshall McLuhan insight how we shape tools which shape how we think. Mike set me loose on quite a few problems experienced by quite a variety of users, and encouraged to tackle each of them with a different programming language or environment, many of which no longer exist or have much of a footprint on the Web, but as mentioned earlier it was "APL":http://en.wikipedia.org/wiki/APL_(programming_language) which really captured my imagination. Here's a picture of Mike in front of his IBM XT, with its APL keyboard and printer:
+
+<a href="https://www.flickr.com/photos/psd/4321426" title="Mike Taylor ICI Runcorn by Paul Downey, on Flickr"><img src="https://farm1.staticflickr.com/1/4321426_67ffe39a95_z.jpg" width="640" height="431" alt="Mike Taylor ICI Runcorn"></a>
+
+Given my time with the likes of Prolog, SAVOIR and "SAS":http://en.wikipedia.org/wiki/SAS_(software), and my long love of APL, I'm rather surprised to be finding "R":http://en.wikipedia.org/wiki/R_(programming_language) heavy going. Here's a hello-word plot of prices:
+
+bc.  &gt; prices <- read.csv("data/prices.tsv", sep="⋯")
+&gt; plot(prices[,1])
+
+<a href="https://www.flickr.com/photos/psd/15057749553" title="R prices"><img src="https://farm6.staticflickr.com/5601/15057749553_3406f2e7a2_z.jpg" width="640" height="607" alt="R prices"></a>
+
+R is after all just yet another workspace environment with great matrix manipulation, so what's not to like?  Well whilst interactive environments are great for experimentation and learning, my aesthetic is definitely for small pieces, loosely joined and it's hard to fit workspaces into the "Unix pipeline":http://en.wikipedia.org/wiki/Pipeline_(Unix). It is, however possible to create R scripts using the following "shebang":http://en.wikipedia.org/wiki/Shebang_(Unix):
+
+bc. #!/usr/bin/env r --slave -f
+
+and whilst can generate plots as images:
+
+bc. png("out/pricesmooth.png", width=640, height=480)
+
+I've had little luck dealing with files from standard input even when using a filename of @/dev/stdin@, though it is possible to generate images to standard output:
+
+bc. png("/dev/stdout", width=640, height=480)
+
+The R scatter plot is almost as fast to render as our original postscript version from "Day 4":http://blog.whatfettle.com/2014/10/17/one-csv-thirty-stories-4-scattering/:
+
+bc. plot(prices[,1], prices[,2])
+
+<a href="https://www.flickr.com/photos/psd/15491772618" title="R Scatterplot"><img src="https://farm6.staticflickr.com/5609/15491772618_a1e649a1ae_z.jpg" width="640" height="480" alt="R Scatterplot"></a>
+
+Of course the reason to use a package like R is it provides code to analyse the data, such as fitting a "Local regression (LOESS)":http://en.wikipedia.org/wiki/Local_regression curve:
+
+bc. scatter.smooth(prices[,1], prices[,2], degree=2, col="#C8C8C8", span=0.5)
+
+<a href="https://www.flickr.com/photos/psd/15491767658" title="LOESS curve"><img src="https://farm6.staticflickr.com/5614/15491767658_9a1f63f91f_z.jpg" width="590" height="528" alt="LOESS curve"></a>
+
+Cropping the plot to figures below £600,000 makes that flat line a little more informative:
+
+bc. scatter.smooth(prices[,1], prices[,2], degree=2, col="#c8c8c8", span=0.5, ylim=c(0, 600000))
+
+<a href="https://www.flickr.com/photos/psd/15496343807" title="LOESS zoomed"><img src="https://farm6.staticflickr.com/5599/15496343807_75eb0d5c2c_z.jpg" width="640" height="636" alt="LOESS zoomed"></a>
+
+basically showing prices rising gradually with a steeper build up before 2009. I could spend time "tomorrow" improving this plot, but first I think I need to grab some of the low-hanging fruit to overcome my now 8 post deficit.
+
+<span id="†">†</span><em>I'm now bothered by that description because my time spent with Pam was brilliant and I think I'm now close to her age when we shared an office.</em>
