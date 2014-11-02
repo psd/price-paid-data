@@ -35,21 +35,26 @@ body {
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
+// ideally these should be calculated from the data ..
+var maxCount = 27000;
+var minYear = 1995;
+var maxYear = 2014;
+
 var width = 960,
     height = 136,
     cellSize = 17; // cell size
 
 var day = d3.time.format("%w"),
     week = d3.time.format("%U"),
-    percent = d3.format(".1%"),
+    value = d3.format("U"),
     format = d3.time.format("%Y-%m-%d");
 
 var color = d3.scale.quantize()
-    .domain([-.05, .05])
+    .domain([0, maxCount])
     .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
 
 var svg = d3.select("body").selectAll("svg")
-    .data(d3.range(1990, 2011))
+    .data(d3.range(minYear, maxYear))
   .enter().append("svg")
     .attr("width", width)
     .attr("height", height)
@@ -81,16 +86,18 @@ svg.selectAll(".month")
     .attr("class", "month")
     .attr("d", monthPath);
 
-d3.csv("dji.csv", function(error, csv) {
+d3.text("../data/date.tsv", function(text) {
+  var tsv = d3.tsv.parse("Count\tDate\n" + text);
+
   var data = d3.nest()
     .key(function(d) { return d.Date; })
-    .rollup(function(d) { return (d[0].Close - d[0].Open) / d[0].Open; })
-    .map(csv);
+    .rollup(function(d) { return +d[0].Count; })
+    .map(tsv);
 
   rect.filter(function(d) { return d in data; })
       .attr("class", function(d) { return "day " + color(data[d]); })
     .select("title")
-      .text(function(d) { return d + ": " + percent(data[d]); });
+      .text(function(d) { return d + ": " + value(data[d]); });
 });
 
 function monthPath(t0) {
