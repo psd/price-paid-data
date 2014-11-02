@@ -27,6 +27,7 @@ BEGIN {
     if (date_last && date_last != date) {
         print_prices(date_last, counts);
         lines = 0;
+        delete counts;
     }
     date_last = date;
 }
