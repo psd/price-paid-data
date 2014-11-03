@@ -5,7 +5,6 @@ body {
   font-size: 10px;
   margin: auto;
   position: relative;
-  width: 960px;
 }
 
 .axis path,
@@ -49,9 +48,13 @@ d3.csv("../data/pricebands.csv", function(error, data) {
   var yGroupMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y; }); }),
       yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-  var margin = {top: 60, right: 20, bottom: 30, left: 40},
-      width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+  var width = window.innerWidth || document.documentElement.clientWidth;
+  var height = window.innerHeight || document.documentElement.clientHeight;
+
+  var margin = {top: 60, right: 20, bottom: 30, left: 40};
+
+  width = width - margin.left - margin.right;
+  height = height- margin.top - margin.bottom;
 
   var x = d3.scale.ordinal()
       .domain(d3.range(m))
