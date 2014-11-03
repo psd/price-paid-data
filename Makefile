@@ -28,6 +28,10 @@ IMAGES=\
 	out/yearly.png \
 	out/pricesmooth.png
 
+STATS=\
+	data/stats.tsv \
+	data/pricebands.csv
+
 images:	$(IMAGES)
 
 # R smooth LOESS curve
@@ -118,6 +122,9 @@ out/scatterps.png:	data/prices.tsv bin/scatterps.sh
 #
 #  stats
 #
+data/pricebands.csv:	data/prices.tsv bin/pricebands.awk
+	bin/pricebands.awk < data/prices.tsv > $@
+
 data/priceheat.tsv:	data/prices.tsv bin/priceheat.awk
 	bin/priceheat.awk < data/prices.tsv > $@
 
@@ -138,7 +145,7 @@ data/pricethousands.tsv:	data/pp.tsv
 data/prices.tsv:	data/pp.tsv
 	awk -F'	' '{print $$2"	"$$1}' < data/pp.tsv | sort > $@
 
-stats:	data/stats.tsv
+stats:	$(STATS)
 
 # basic price-paid statistics
 data/stats.tsv:	data/pp.tsv bin/stats.awk
