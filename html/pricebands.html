@@ -1,14 +1,11 @@
 <!DOCTYPE html><meta charset="utf-8"><style>
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: sans-serif;
+  font-size: 10px;
   margin: auto;
   position: relative;
   width: 960px;
-}
-
-text {
-  font: 10px sans-serif;
 }
 
 .axis path,
@@ -20,14 +17,14 @@ text {
 
 form {
   position: absolute;
-  right: 10px;
+  left: 10px;
   top: 10px;
 }
 
 </style>
 <form>
-  <label><input type="radio" name="mode" value="grouped"> Grouped</label>
-  <label><input type="radio" name="mode" value="stacked" checked> Stacked</label>
+  <label><input type="radio" name="mode" value="grouped" checked> Grouped</label>
+  <label><input type="radio" name="mode" value="stacked"> Stacked</label>
 </form>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
@@ -39,7 +36,7 @@ d3.csv("../data/pricebands.csv", function(error, data) {
     d.bands = bandNames.map(function(name) { return {name: name, value: +d[name]}; });
   });
 
-  var n = bandNames.length; // number of layers
+  var nlayers = n = bandNames.length; // number of layers
   var m = data.length; // number of samples per layer
 
   var stack = d3.layout.stack();
@@ -65,14 +62,7 @@ d3.csv("../data/pricebands.csv", function(error, data) {
       .range([height, 0]);
 
   var color = d3.scale.ordinal()
-      .domain([0, n - 1])
       .range(["#d73027","#fc8d59","#fee08b","#d9ef8b","#91cf60","#1a9850"]);
-
-  var xAxis = d3.svg.axis()
-      .scale(x)
-      .tickSize(0)
-      .tickPadding(6)
-      .orient("bottom");
 
   var svg = d3.select("body").append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -94,10 +84,40 @@ d3.csv("../data/pricebands.csv", function(error, data) {
       .attr("width", x.rangeBand())
       .attr("height", 0);
 
-  rect.transition()
-      .delay(function(d, i) { return i * 10; })
-      .attr("y", function(d) { return y(d.y0 + d.y); })
-      .attr("height", function(d) { return y(d.y0) - y(d.y0 + d.y); });
+  /*
+   *  legend
+   */
+  var legend = svg.selectAll(".legend")
+      .data(bandNames.slice().reverse())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", function(d, i) { return color(n-i-1) });
+
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
+
+  /*
+   *  x axis
+   */
+  var x0 = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+  x0.domain(data.map(function(d) { return d.Year; }));
+
+  var xAxis = d3.svg.axis()
+      .scale(x0)
+      .tickSize(0)
+      .tickPadding(6)
+      .orient("bottom");
 
   svg.append("g")
       .attr("class", "x axis")
@@ -107,12 +127,13 @@ d3.csv("../data/pricebands.csv", function(error, data) {
   /*
    *  transition
    */
+  transitionGrouped();
+
   d3.selectAll("input").on("change", change);
 
   var timeout = setTimeout(function() {
-    d3.select("input[value=\"grouped\"]").property("checked", true).each(change);
+    d3.select("input[value=\"stacked\"]").property("checked", true).each(change);
   }, 2000);
-
 
   function change() {
     clearTimeout(timeout);
