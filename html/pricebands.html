@@ -42,14 +42,14 @@ d3.csv("../data/pricebands.csv", function(error, data) {
   var stack = d3.layout.stack();
   var layers = stack(d3.range(n).map(function(col) {
     return data.map(function(d, x) { 
-      return {x: x, y: d.bands[col].value};
+      return {x: x, y: d.bands[col].value, band: col};
     });
   }));
 
   var yGroupMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y; }); }),
       yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
-  var margin = {top: 40, right: 10, bottom: 20, left: 10},
+  var margin = {top: 60, right: 20, bottom: 30, left: 40},
       width = 960 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
 
@@ -83,6 +83,10 @@ d3.csv("../data/pricebands.csv", function(error, data) {
       .attr("y", height)
       .attr("width", x.rangeBand())
       .attr("height", 0);
+
+  rect.append("svg:title").text(function(d, i) {
+    return data[d.x].Year + " [" + bandNames[d.band] + "] " + d.y;
+  });
 
   /*
    *  legend
@@ -123,6 +127,26 @@ d3.csv("../data/pricebands.csv", function(error, data) {
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
+
+  /*
+   *  y axis
+   */
+  y.domain([0, d3.max(data, function(d) { return d3.max(d.bands, function(d) { return d.value; }); })]);
+
+  var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left")
+      .tickFormat(d3.format(".2s"));
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Transactions");
 
   /*
    *  transition
