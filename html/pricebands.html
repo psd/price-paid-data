@@ -64,9 +64,9 @@ d3.csv("../data/pricebands.csv", function(error, data) {
       .domain([0, yStackMax])
       .range([height, 0]);
 
-  var color = d3.scale.linear()
+  var color = d3.scale.ordinal()
       .domain([0, n - 1])
-      .range(["#aad", "#556"]);
+      .range(["#d73027","#fc8d59","#fee08b","#d9ef8b","#91cf60","#1a9850"]);
 
   var xAxis = d3.svg.axis()
       .scale(x)
