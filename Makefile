@@ -1,5 +1,6 @@
 PP_COMPLETE_URL=http://publicdata.landregistry.gov.uk/market-trend-data/price-paid-data/a/pp-complete.csv
 CSV_TO_TSV_URL=https://raw.githubusercontent.com/clarkgrubb/data-tools/master/src/csv_to_tsv.py
+CODEPO_GB_URL=http://parlvid.mysociety.org/os/codepo_gb-2014-08.zip
 
 .DELETE_ON_ERROR:
 .PHONY: makefiles
@@ -26,13 +27,21 @@ IMAGES=\
 	out/pricelog.png \
 	out/priceheat.png \
 	out/yearly.png \
-	out/pricesmooth.png
+	out/pricesmooth.png \
+	out/mapscatterim.png
 
 STATS=\
 	data/stats.tsv \
 	data/pricebands.csv
 
 images:	$(IMAGES)
+
+# ImageMagick scatter map plot
+out/mapscatterim.png:	data/postcodes_os.tsv bin/mapscatterim.sh
+	@mkdir -p out
+	bin/mapscatterim.sh < data/postcodes_os.tsv | convert mvg:- $@
+	optipng $@
+
 
 # R smooth LOESS curve
 out/pricesmooth.png:	data/prices.tsv bin/pricesmooth.R
@@ -145,6 +154,17 @@ data/pricethousands.tsv:	data/pp.tsv
 data/prices.tsv:	data/pp.tsv
 	awk -F'	' '{print $$2"	"$$1}' < data/pp.tsv | sort > $@
 
+# postcode to eastings/northings
+data/postcodes_os.tsv:	data/codepo_gb.tsv data/postcodes.tsv
+	join -t'	' data/codepo_gb.tsv data/postcodes.tsv > $@
+
+data/codepo_gb.tsv: tmp/codepo_gb.zip
+	unzip -o -d tmp/codepo_gb tmp/codepo_gb.zip
+	cat tmp/codepo_gb/Data/CSV/* | sed -e 's/[ "]//g' -e 's/,/	/g' | cut -d'	' -f1,3,4 | sort > $@
+
+data/postcodes.tsv:	data/postcode.tsv
+	cat data/postcode.tsv | sed 's/ //g' | awk '{print $$2 "	" $$1}' | sort > $@
+
 stats:	$(STATS)
 
 # basic price-paid statistics
@@ -164,6 +184,11 @@ bin/csv-to-tsv.py:
 	@mkdir -p data
 	curl -s $(CSV_TO_TSV_URL) > $@
 	chmod +x $@
+
+# download OS Code-Point-Open
+tmp/codepo_gb.zip:
+	@mkdir -p tmp
+	curl -s $(CODEPO_GB_URL) > $@
 
 #
 #  counts
