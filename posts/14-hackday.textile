@@ -6,6 +6,8 @@
 
 I think it was a great event, with some amazing hacks presented. My two favourite hacks had multidisciplinary teams build something, try it with users, realise it was the wrong thing, then building something better as a result. All in one day!
 
+<a href="https://www.flickr.com/photos/psd/15538436767" title="Let the hacking begin! by Paul Downey, on Flickr"><img src="https://farm4.staticflickr.com/3952/15538436767_7889cab7b1_c.jpg" width="800" height="279" alt="Let the hacking begin!"></a>
+
 For my part I tried to help one of the hacks consume the "Land Registry INSPIRE index polygons":https://www.gov.uk/inspire-index-polygons-spatial-data by converting the "GML":http://en.wikipedia.org/wiki/Geography_Markup_Language format shapefiles into "TopoJSON":http://en.wikipedia.org/wiki/GeoJSON#TopoJSON files. Unfortunately this took a lot of compute time, and both "topojson":https://github.com/mbostock/topojson and "mapshaper":https://github.com/mbloch/mapshaper kept running out of memory on my huge EC2 machine. You can see the code and some of the polygons in "github.com/psd/landregistry-inspire-data":https://github.com/psd/landregistry-inspire-data
 
 Close to the final show and tell I paired up with "Michael":https://twitter.com/mikiee_t and we turned the heatmap from "Day 8":http://blog.whatfettle.com/2014/10/25/one-csv-thirty-stories-8-heatmap-meh/ into a poster which we framed and presented to the Land Registy, to be hung in their canteen:
