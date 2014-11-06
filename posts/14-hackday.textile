@@ -10,7 +10,7 @@ For my part I tried to help one of the hacks consume the "Land Registry INSPIRE 
 
 Close to the final show and tell I paired up with "Michael":https://twitter.com/mikiee_t and we turned the heatmap from "Day 8":http://blog.whatfettle.com/2014/10/25/one-csv-thirty-stories-8-heatmap-meh/ into a poster which we framed and presented to the Land Registy, to be hung in their canteen:
 
-<img src="https://raw.githubusercontent.com/LandRegistry/hackday/master/poster.png">
+<a href="https://github.com/LandRegistry/hackday/raw/master/price-paid-data-heatmap.pdf"><img src="http://farm8.staticflickr.com/7553/15108565183_9f04cfc2a9_c.jpg" width="800" height="534" alt="Poster"></a>
 
 [<a href="https://github.com/LandRegistry/hackday/raw/master/price-paid-data-heatmap.pdf">PDF</a>]
 
