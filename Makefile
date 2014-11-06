@@ -26,6 +26,7 @@ IMAGES=\
 	out/pricethousands.png \
 	out/pricelog.png \
 	out/priceheat.png \
+	out/priceheat.ps \
 	out/yearly.png \
 	out/pricesmooth.png \
 	out/mapscatterim.png
@@ -54,6 +55,11 @@ out/yearly.png:	data/yearly.tsv bin/yearly.gpi
 	@mkdir -p out
 	bin/yearly.gpi < data/yearly.tsv > $@
 	optipng $@
+
+# gnuplot price heatmap eps
+out/priceheat.ps:	data/priceheat.tsv bin/priceheatps.gpi
+	@mkdir -p out
+	bin/priceheatps.gpi < data/priceheat.tsv > $@
 
 # gnuplot price heatmap
 out/priceheat.png:	data/priceheat.tsv bin/priceheat.gpi

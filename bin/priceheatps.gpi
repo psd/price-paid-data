@@ -1,6 +1,6 @@
 #!/usr/bin/env gnuplot
 
-set terminal png font "helvetica,14" size 6200,4800 transparent truecolor
+set terminal postscript eps size 91.5cm,61cm enhanced color font 'Helvetica,20' linewidth 2
 set output "/dev/stdout"
 set key off
 set view map
@@ -10,7 +10,7 @@ set xdata time
 set timefmt "%Y-%md"
 set format x "%Y-%m"
 
-set ylabel "Price (£10k)"
+set ylabel "Price (£1k)"
 
 set palette defined (\
 0 '#fff7ec',\

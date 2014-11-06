@@ -14,8 +14,8 @@ function print_prices(date, counts) {
 }
 BEGIN {
     FS="	"
-    price_unit = 10000;
-    price_max = 60;
+    price_unit = 5000;
+    price_max = 110;
 }
 {
     lines++;
