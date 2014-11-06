@@ -1,0 +1,17 @@
+<em>This is day 14 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data</em>
+
+"Yesterday":http://blog.whatfettle.com/2014/11/04/one-csv-thirty-stories-12-stacked/ I started to look into where all the houses listed inside the CSV are located, but today I'm down in Plymouth to help run an internal "Land Registry Hackday":https://github.com/landregistry/hackday
+
+<img src="https://raw.githubusercontent.com/LandRegistry/hackday/master/poster.png">
+
+I think it was a great event, with some amazing hacks presented. My two favourite hacks had multidisciplinary teams build something, try it with users, realise it was the wrong thing, then building something better as a result. All in one day!
+
+For my part I tried to help one of the hacks consume the "Land Registry INSPIRE index polygons":https://www.gov.uk/inspire-index-polygons-spatial-data by converting the "GML":http://en.wikipedia.org/wiki/Geography_Markup_Language format shapefiles into "TopoJSON":http://en.wikipedia.org/wiki/GeoJSON#TopoJSON files. Unfortunately this took a lot of compute time, and both "topojson":https://github.com/mbostock/topojson and "mapshaper":https://github.com/mbloch/mapshaper kept running out of memory on my huge EC2 machine. You can see the code and some of the polygons in "github.com/psd/landregistry-inspire-data":https://github.com/psd/landregistry-inspire-data
+
+Close to the final show and tell I paired up with "Michael":https://twitter.com/mikiee_t and we turned the heatmap from "Day 8":http://blog.whatfettle.com/2014/10/25/one-csv-thirty-stories-8-heatmap-meh/ into a poster which we framed and presented to the Land Registy, to be hung in their canteen:
+
+<img src="https://raw.githubusercontent.com/LandRegistry/hackday/master/poster.png">
+
+[<a href="https://github.com/LandRegistry/hackday/raw/master/price-paid-data-heatmap.pdf">PDF</a>]
+
+Tomorrow I hope to make another, similar poster based on the geographical data.
