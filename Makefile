@@ -29,7 +29,8 @@ IMAGES=\
 	out/priceheat.ps \
 	out/yearly.png \
 	out/pricesmooth.png \
-	out/mapscatterim.png
+	out/mapscatterim.png \
+	out/scattermap.png
 
 STATS=\
 	data/stats.tsv \
@@ -38,6 +39,12 @@ STATS=\
 images:	$(IMAGES)
 
 # ImageMagick scatter map plot
+out/scattermap.png:	data/postcodes_os.tsv bin/scattermap.sh
+	@mkdir -p out
+	bin/scattermap.sh < data/postcodes_os.tsv | convert mvg:- $@
+	#optipng $@
+
+# map for the poster
 out/mapscatterim.png:	data/postcodes_os.tsv bin/mapscatterim.sh
 	@mkdir -p out
 	bin/mapscatterim.sh < data/postcodes_os.tsv | convert mvg:- $@
