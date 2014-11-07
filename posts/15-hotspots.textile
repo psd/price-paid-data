@@ -1,0 +1,11 @@
+<em>This is day 15 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data</em>
+
+Following on from "yesterday":http://blog.whatfettle.com/2014/11/07/one-csv-thirty-stories-14-hackday/'s hackday I had a spot of breakfast with "Michael":https://twitter.com/mikiee_t. I tweaked the map from "Day 13":http://blog.whatfettle.com/2014/11/06/one-csv-thirty-stories-13-postcodes/ to "scale the size of each postcode": using the total volume of transactions over 20 years. Michael quickly turned this into a second poster before dashing to the station:
+
+<a href="https://github.com/LandRegistry/hackday/raw/master/price-paid-data-scattermap.pdf"><img src="https://farm4.staticflickr.com/3954/15545917019_a2b304e2ae_c.jpg" width="534" height="800" alt="price-paid-scattermap"></a>
+
+[<a href="https://github.com/LandRegistry/hackday/raw/master/price-paid-data-scattermap.pdf">PDF</a>]
+
+I'm cock-a-hoop how this image has turned out, zoomed in the detail looks like bacteria on a petri-dish, zoomed out it's apparent not just where people live, but where people buy and sell houses the most, with the coast and Cornwall darker than you'd expect, I guess due to holiday cottages, but there are many more interesting stories begging to be discovered from this one, simple map weighted with other open data I'm pretty sure must be available from the ONS.
+
+This afternoon I'm on a train travelling back from Plymouth which means several hours "without access to the interwebs":en.wikipedia.org/wiki/Communications_blackout — an ideal opportunity to iterate this hack.
