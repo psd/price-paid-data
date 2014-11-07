@@ -18,7 +18,7 @@ width=7000
 height=13000
 radius=3
 color=black
-opacity=0.2
+opacity=0.1
 xmax=700000
 ymax=1300000
 
