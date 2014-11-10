@@ -8,10 +8,11 @@ use warnings;
 
 my $geocodes = shift || "data/codepo_gb.tsv";
 my $outdir = shift || "out/mapination";
-my $width = 350;
-my $height = 350;
+my $width = 256;
+my $height = 256;
+my $colors = 64;
 my $radius = 1;
-my $opacity = 0.25;
+my $opacity = 0.1;
 my $max_easting = 700000;
 my $max_northing = 700000;
 my %postcode = ();
@@ -19,7 +20,7 @@ my %postcode = ();
 load_postcodes($geocodes);
 
 #
-# read  generate a scattermap for each one .. 
+# read  generate a scattermap for each day .. 
 #
 my ($date, $last_date, $count, $postcode);
 my @points = ();
@@ -43,7 +44,7 @@ sub create_image {
     my $out = "$outdir/$date.gif";
     system("mkdir -p $outdir") unless (-d $outdir);
     print STDERR "creating $out ..\n";
-    open(my $fp, "| convert mvg: $out");
+    open(my $fp, "| convert -colors $colors -font 'helvetica' -annotate +5+15 '$date' mvg: $out");
     print $fp <<HEADER;
 viewbox 0 0 $width $height fill transparent rectangle 0,0 $width $height
 fill black
@@ -58,7 +59,6 @@ HEADER
         printf($fp "circle %d,%d,%d,%d\n", $x, $y, $x+$size, $y+$size);
     }
     close($fp);
-    exit;
 }
 
 #

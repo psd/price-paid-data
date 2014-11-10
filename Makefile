@@ -31,7 +31,7 @@ IMAGES=\
 	out/pricesmooth.png \
 	out/mapscatterim.png \
 	out/scattermap.png \
-	out/mapination.gif
+	out/daily-2007.gif
 
 STATS=\
 	data/stats.tsv \
@@ -39,10 +39,12 @@ STATS=\
 
 images:	$(IMAGES)
 
-# animated gif scatter map plot
-out/mapination.gif:	bin/mapination.pl data/codepo_gb.tsv data/daily-postcode.tsv
+# daily mapination animated gif scatter map plot for each year
+out/daily-2007.gif:	out/mapination/2014-01-01.gif
+	for year in `seq 1995 2014` ; do gifsicle --delay 33 out/mapination/$$year-??-??*.gif > out/mapination/daily-$$year.gif ; done
+
+out/mapination/2014-01-01.gif: bin/mapination.pl data/codepo_gb.tsv data/daily-postcode.tsv
 	bin/mapination.pl data/codepo_gb.tsv out/mapination < data/daily-postcode.tsv
-	gifsicle out/mapination/*.gif > $@
 
 # ImageMagick scatter map plot
 out/scattermap.png:	data/postcodes_os.tsv bin/scattermap.sh
@@ -55,7 +57,6 @@ out/mapscatterim.png:	data/postcodes_os.tsv bin/mapscatterim.sh
 	@mkdir -p out
 	bin/mapscatterim.sh < data/postcodes_os.tsv | convert mvg:- $@
 	optipng $@
-
 
 # R smooth LOESS curve
 out/pricesmooth.png:	data/prices.tsv bin/pricesmooth.R
