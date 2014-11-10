@@ -23,7 +23,7 @@ data/date.tsv:	data/pp.tsv bin/count.sh
 	cut -f2 data/pp.tsv | bin/count.sh > $@
 
 data/postcode.tsv:	data/pp.tsv bin/count.sh
-	cut -f3 data/pp.tsv | bin/count.sh > $@
+	cut -f3 data/pp.tsv | sed 's/ //g'| bin/count.sh > $@
 
 data/type.tsv:	data/pp.tsv bin/count.sh
 	cut -f4 data/pp.tsv | bin/count.sh > $@

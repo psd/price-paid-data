@@ -1,6 +1,6 @@
 1	price
 2	date
-3	postcode
+3	postcode | sed 's/ //g'
 4	type
 5	new
 6	duration

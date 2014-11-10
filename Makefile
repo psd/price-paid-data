@@ -30,13 +30,19 @@ IMAGES=\
 	out/yearly.png \
 	out/pricesmooth.png \
 	out/mapscatterim.png \
-	out/scattermap.png
+	out/scattermap.png \
+	out/mapination.gif
 
 STATS=\
 	data/stats.tsv \
 	data/pricebands.csv
 
 images:	$(IMAGES)
+
+# animated gif scatter map plot
+out/mapination.gif:	bin/mapination.pl data/codepo_gb.tsv data/daily-postcode.tsv
+	bin/mapination.pl data/codepo_gb.tsv out/mapination < data/daily-postcode.tsv
+	gifsicle out/mapination/*.gif > $@
 
 # ImageMagick scatter map plot
 out/scattermap.png:	data/postcodes_os.tsv bin/scattermap.sh
@@ -149,6 +155,9 @@ data/pricebands.csv:	data/prices.tsv bin/pricebands.awk
 
 data/priceheat.tsv:	data/prices.tsv bin/priceheat.awk
 	bin/priceheat.awk < data/prices.tsv > $@
+
+data/daily-postcode.tsv:	data/pp.tsv
+	cut -d'	' -f2,3 data/pp.tsv | sed -e 's/ //' | awk '$$2' | bin/count.sh | sort -k2 > $@
 
 # count transactions per-year
 data/yearly.tsv:	data/pp.tsv
