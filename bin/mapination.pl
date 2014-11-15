@@ -11,7 +11,7 @@ my $outdir = shift || "out/mapination";
 my $width = 256;
 my $height = 256;
 my $colors = 64;
-my $radius = 1;
+my $scale = 1;
 my $opacity = 0.1;
 my $max_easting = 700000;
 my $max_northing = 700000;
@@ -55,7 +55,7 @@ HEADER
         next unless $c;
         my $x = $width * $c->{easting} / $max_easting;
         my $y = $height - ($height * $c->{northing} / $max_northing);
-        my $size = $p->{count} * $radius;
+        my $size = sqrt($p->{count}) * $scale;
         printf($fp "circle %d,%d,%d,%d\n", $x, $y, $x+$size, $y+$size);
     }
     close($fp);
