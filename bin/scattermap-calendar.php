@@ -9,7 +9,7 @@
     }
 
     $ywidth = '42.5mm';
-    $width = '8.5mm';
+    $width = '8mm';
 
 ?><!DOCTYPE html>
 <html>
@@ -22,13 +22,13 @@
     border: none;
 }
 body {
-    font-family: "Suisse Int'l Bold", "Helvetica Neue", sans-serif;
+    font-family: "Suisse Int'l", "Helvetica Neue", sans-serif;
 }
 .page {
     width: 915mm;
     height: 630mm;
     overflow: hidden;
-    border-bottom: 1px solid red;
+    border-bottom: 1mm solid #888;
 }
 .year {
     width: <?= $ywidth ?>;
@@ -42,12 +42,15 @@ body {
     overflow: hidden;
     height: 7.5mm;
 }
+h1 {
+    font-size: 12mm;
+}
 h2, h3 {
     display: block;
     float: left;
     font-weight: bold;
     text-align: center;
-    color: #eee;
+    color: #888;
 }
 h2 {
     width: <?= $ywidth ?>;
@@ -65,6 +68,17 @@ h3 {
   overflow: hidden;
   height: <?= $width ?>;
   max-width: <?= $width ?>;
+  border-left: 0.5mm solid white;
+}
+.d01:after {
+  content: "";
+  background: #444;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0.75mm;
+  width: 2.25mm;
+  opacity: 0.5;
 }
 .day .spacer {
   width: <?= $width ?>;
@@ -81,7 +95,7 @@ h3 {
 </head>
 <body>
 <div class="page">
-<h1>Volume of Land Registry Transactions</h1>
+<h1>Volume of Land Registry Transactions 1995–2014</h1>
 <div class="calendar">
 <?php
 date_default_timezone_set("GMT");
@@ -121,12 +135,17 @@ for ($year=1995; $year <= gmdate("Y"); $year++) {
         $weekday = jddayofweek($jd, 0);
         $letter = $letters[$weekday];
         $mdate = substr($date, 0, 7);
+        $month = substr($date, 5, 2);
+        $dayno = substr($date, 8, 2);
         $left = (intval(substr($date, -2)) -1) * 100;
+        $file = "$imgdir/sprites-$mdate.gif";
 
         if ($letter != 'S') {
-            echo "<div class='day'>";
-            echo "<img class='spacer' src='$imgdir/1994-01-01.gif'>";
-            echo "<img class='sprite' src='$imgdir/sprites-$mdate.gif' style='left:-$left%' title='$date'>";
+            echo "<div class='day m$month d$dayno'>";
+            echo "<img class='spacer' src='$imgdir/blank.gif'>";
+            if (file_exists("out/$file")) {
+                echo "<img class='sprite' src='$file' style='left:-$left%' title='$date'>";
+            }
             echo "</div>\n";
         }
     }

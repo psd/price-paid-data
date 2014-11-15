@@ -31,16 +31,37 @@ IMAGES=\
 	out/pricesmooth.png \
 	out/mapscatterim.png \
 	out/scattermap.png \
-	out/daily-2007.gif
+	out/mapination/daily-2007.gif \
+	out/mapination/blank.gif \
+	html/scattermap-calendar.html
 
 STATS=\
 	data/stats.tsv \
 	data/pricebands.csv
 
+MONTHS=01 02 03 04 05 06 07 08 09 10 11 12
+
 images:	$(IMAGES)
 
+# poster of daily mapination scatter map plots
+html/scattermap-calendar.html:	out/mapination/sprites-1995-01.gif bin/scattermap-calendar.php
+	php -l bin/scattermap-calendar.php
+	bin/scattermap-calendar.php > $@
+
+out/mapination/sprites-1995-01.gif:	out/mapination/1995-01-01.gif
+	for year in `seq 1995 2014` ; do \
+	  for month in $(MONTHS); do \
+		if [ -f "out/mapination/$$year-$$month-01.gif" ] ; then \
+			convert out/mapination/$$year-$$month-??.gif +append -extent 8192x256 out/mapination/sprites-$$year-$$month.gif;\
+		fi \
+	  done \
+	done
+
+out/mapination/blank.gif:
+	convert -size 10x10 xc:white $@
+
 # daily mapination animated gif scatter map plot for each year
-out/daily-2007.gif:	out/mapination/2014-01-01.gif
+out/mapination/daily-2007.gif:	out/mapination/2014-01-01.gif
 	for year in `seq 1995 2014` ; do gifsicle --delay 33 out/mapination/$$year-??-??*.gif > out/mapination/daily-$$year.gif ; done
 
 out/mapination/2014-01-01.gif: bin/mapination.pl data/codepo_gb.tsv data/daily-postcode.tsv
