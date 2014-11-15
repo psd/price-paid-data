@@ -92,6 +92,27 @@ h3 {
   max-width: none;
   max-height: 100%;
 }
+.footer {
+    clear: both;
+    border-top: 25mm solid white;
+    height: 15mm;
+    font-family: "Helvetica Neue", "Helvetica", sans-serif;
+    font-size: 7.75mm;
+    font-weight: lighter;
+    color: #888;
+}
+.footer img.ogl {
+    display: block;
+    float: left;
+    height: 18mm;
+    padding-right: 7mm;
+}
+.footer p {
+    display: block;
+}
+.footer span {
+    padding-right: 1em;
+}
 </style>
 </head>
 <body>
@@ -154,8 +175,9 @@ for ($year=1995; $year <= gmdate("Y"); $year++) {
 }
 ?>
 <div class="footer">
-    <img src="images/ogl.png">
-    <p>Published under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>,</p>
+    <img class="ogl" src="../images/ogl.png">
+    <p>This poster was created by @psd from Land Registry price-paid open data as a part of the Land Registry Hackday, November 2014.</p>
+    <p><span>Available from https://github.com/LandRegistry/Hackday</span> © Crown copyright, published under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>.</p>
 </div>
 </div>
 </body>
