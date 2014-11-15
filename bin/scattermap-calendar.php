@@ -29,13 +29,14 @@ body {
     height: 630mm;
     overflow: hidden;
     border-bottom: 1mm solid #888;
+    padding: 35mm;
 }
 .year {
     width: <?= $ywidth ?>;
     float: left;
     border-right: 3mm solid white;
     overflow: hidden;
-    margin-top: 10mm;
+    margin-top: 15mm;
 }
 .letters {
     width: <?= $ywidth; ?>;
@@ -43,7 +44,7 @@ body {
     height: 7.5mm;
 }
 h1 {
-    font-size: 12mm;
+    font-size: 16mm;
 }
 h2, h3 {
     display: block;
@@ -142,7 +143,7 @@ for ($year=1995; $year <= gmdate("Y"); $year++) {
 
         if ($letter != 'S') {
             echo "<div class='day m$month d$dayno'>";
-            echo "<img class='spacer' src='$imgdir/blank.gif'>";
+            echo "<img class='spacer' src='$imgdir/blank.gif' title='$date'>";
             if (file_exists("out/$file")) {
                 echo "<img class='sprite' src='$file' style='left:-$left%' title='$date'>";
             }
@@ -152,6 +153,10 @@ for ($year=1995; $year <= gmdate("Y"); $year++) {
     echo "</div>\n";
 }
 ?>
+<div class="footer">
+    <img src="images/ogl.png">
+    <p>Published under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>,</p>
+</div>
 </div>
 </body>
 </html>
