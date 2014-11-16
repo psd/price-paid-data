@@ -8,7 +8,13 @@ CODEPO_GB_URL=http://parlvid.mysociety.org/os/codepo_gb-2014-08.zip
 #
 #  the dependency chain will emerge
 #
-all:	counts stats images
+all:	counts stats images posters
+
+#
+#  posters
+#
+POSTERS=\
+	posters/scattermap-calendar.pdf
 
 #
 #  images
@@ -41,7 +47,13 @@ STATS=\
 
 MONTHS=01 02 03 04 05 06 07 08 09 10 11 12
 
+posters:	$(POSTERS)
+
 images:	$(IMAGES)
+
+posters/scattermap-calendar.pdf:	html/scattermap-calendar.html
+	@mkdir -p posters
+	wkhtmltopdf -q --page-size a1 --orientation landscape html/scattermap-calendar.html $@
 
 # poster of daily mapination scatter map plots
 html/scattermap-calendar.html:	out/mapination/sprites-1995-01.gif bin/scattermap-calendar.php

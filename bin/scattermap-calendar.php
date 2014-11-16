@@ -8,8 +8,8 @@
         return sprintf("%4d-%02d-%02d", $year, $month, $day);
     }
 
-    $ywidth = '42.5mm';
-    $width = '8mm';
+    $width = '5mm';
+    $ywidth = '40mm';
 
 ?><!DOCTYPE html>
 <html>
@@ -23,44 +23,61 @@
 }
 body {
     font-family: "Suisse Int'l", "Helvetica Neue", sans-serif;
+    color: #0b0c0c;
 }
 .page {
+    position: relative;
+    overflow: hidden;
     width: 915mm;
     height: 630mm;
-    overflow: hidden;
-    border-bottom: 1mm solid #888;
-    padding: 35mm;
+    margin: 25mm 35mm 20mm 35mm;
 }
 .year {
     width: <?= $ywidth ?>;
     float: left;
-    border-right: 3mm solid white;
+    border-right: <?= $width ?> solid white;
     overflow: hidden;
-    margin-top: 15mm;
+    margin-top: 10mm;
+}
+.month {
+    height: 45mm;
+    margin-bottom: 2.5mm;
 }
 .letters {
     width: <?= $ywidth; ?>;
     overflow: hidden;
     height: 7.5mm;
+    margin-top: 2.5mm;
 }
 h1 {
     font-size: 16mm;
 }
-h2, h3 {
-    display: block;
-    float: left;
-    font-weight: bold;
+h2 {
+    font-weight: normal;
     text-align: center;
-    color: #888;
+}
+h3 {
+    float: left;
+    font-family: "Helvetica Neue";
+    font-weight: normal;
+    color: #aaa;
 }
 h2 {
     width: <?= $ywidth ?>;
 }
 h3 {
+    display: block;
     width: <?= $width ?>;
+    font-size: 2.5mm;
+    text-align: right;
 }
-.blank {
-    min-width: <?= $width ?>;
+h4 {
+    clear: both;
+    width: 100%;
+    text-align: center;
+    color: #e82020;
+    font-family: "Helvetica Neue";
+    font-weight: lighter;
 }
 .day {
   display: block;
@@ -71,15 +88,14 @@ h3 {
   max-width: <?= $width ?>;
   border-left: 0.5mm solid white;
 }
-.d01:after {
+.day:after {
   content: "";
-  background: #444;
+  background: white;
   position: absolute;
   top: 0;
   left: 0;
   height: 0.75mm;
   width: 2.25mm;
-  opacity: 0.5;
 }
 .day .spacer {
   width: <?= $width ?>;
@@ -93,18 +109,18 @@ h3 {
   max-height: 100%;
 }
 .footer {
-    clear: both;
-    border-top: 25mm solid white;
-    height: 15mm;
+    position: absolute;
+    bottom: 0mm;
+    height: 20mm;
     font-family: "Helvetica Neue", "Helvetica", sans-serif;
-    font-size: 7.75mm;
+    font-size: 5mm;
     font-weight: lighter;
-    color: #888;
+    width: 100%;
 }
 .footer img.ogl {
     display: block;
     float: left;
-    height: 18mm;
+    height: 12.5mm;
     padding-right: 7mm;
 }
 .footer p {
@@ -112,6 +128,10 @@ h3 {
 }
 .footer span {
     padding-right: 1em;
+}
+a {
+    text-decoration: none;
+    color: #0b0c0c;
 }
 </style>
 </head>
@@ -121,63 +141,72 @@ h3 {
 <div class="calendar">
 <?php
 date_default_timezone_set("GMT");
+$letters = array('S','M','T','W','T','F','S');
 
 # one column per-year
+#for ($year=1995; $year <= 2000; $year++) {
 for ($year=1995; $year <= gmdate("Y"); $year++) {
 
-    # year titles
+    # year title
     echo "<div class='year year-$year'>\n";
     echo "<h2>$year</h2>\n";
 
-    # day coulmn titles
-    $letters = array('S','M','T','W','T','F','S');
-    echo "<div class='letters'>\n";
-    foreach($letters as $letter) {
-        if ($letter != 'S') {
-            echo "  <h3>$letter</h3>\n";
-        }
-    }
-    echo "</div>\n";
-
-    # days in first week from previous year
-    $firstday = jddayofweek(gregoriantojd(1, 1, $year));
-    if ($firstday > 0) {
-        for ($weekday = 0; $weekday < jddayofweek(gregoriantojd(1, 1, $year)); $weekday++) {
-            $letter = $letters[$weekday];
-            if ($letter != 'S') {
-                echo "  <div class='day blank $letter'>&nbsp;</div>\n"; 
-            }
-        }
-    }
+    $monthsep = '';
 
     # days of the year
     for ($jd = gregoriantojd(1, 1, $year); $jd <= gregoriantojd(12, 31, $year); $jd++) {
 
         $date = jdtodate($jd);
-        $weekday = jddayofweek($jd, 0);
+        $weekday = jddayofweek($jd);
         $letter = $letters[$weekday];
         $mdate = substr($date, 0, 7);
         $month = substr($date, 5, 2);
         $dayno = substr($date, 8, 2);
+
+        $monthname = date('F', mktime(0, 0, 0, $month, 10));
+
         $left = (intval(substr($date, -2)) -1) * 100;
         $file = "$imgdir/sprites-$mdate.gif";
 
-        if ($letter != 'S') {
-            echo "<div class='day m$month d$dayno'>";
-            echo "<img class='spacer' src='$imgdir/blank.gif' title='$date'>";
-            if (file_exists("out/$file")) {
-                echo "<img class='sprite' src='$file' style='left:-$left%' title='$date'>";
+        if ($dayno == '01') {
+            echo $monthsep;
+            $monthsep = "</div>\n</div>\n";
+
+            echo "<div class='month'>\n";
+            echo "<h4>$monthname</h4>\n";
+
+            # day coulmn titles
+            echo "<div class='letters'>\n";
+            foreach($letters as $letter) {
+                echo "  <h3>$letter</h3>\n";
             }
             echo "</div>\n";
+            echo "<div class='days'>\n";
+
+            # pad days in first week from previous month
+            for ($padday = 0; $padday < $weekday; $padday++) {
+                echo "<div class='day blank $month $year'><img class='spacer' src='$imgdir/blank.gif'></div>\n"; 
+            }
         }
+
+        # day
+        echo "<div class='day y$year m$month d$dayno _$letter'>";
+        echo "<img class='spacer' src='$imgdir/blank.gif' title='$date'>";
+        if (file_exists("out/$file")) {
+            echo "<img class='sprite' src='$file' style='left:-$left%' title='$date'>";
+        }
+        echo "</div>\n";
     }
+
+    echo "</div>\n";
+    echo "</div>\n";
     echo "</div>\n";
 }
 ?>
 <div class="footer">
     <img class="ogl" src="../images/ogl.png">
     <p>This poster was created by @psd from Land Registry price-paid open data as a part of the Land Registry Hackday, November 2014.</p>
-    <p><span>Available from https://github.com/LandRegistry/Hackday</span> © Crown copyright, published under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>.</p>
+    <p><span>Available from http://price-paid-data.whatfettle.com</span> © Crown copyright, published under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>.</p>
 </div>
 </div>
 </body>
