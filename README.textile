@@ -9,3 +9,4 @@ Depends upon:
 * http://www.imagemagick.org/
 * http://optipng.sourceforge.net/
 * http://www.gnuplot.info/
+* http://wkhtmltopdf.org/
