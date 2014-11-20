@@ -14,7 +14,8 @@ all:	counts stats images posters
 #  posters
 #
 POSTERS=\
-	posters/scattermap-calendar.pdf
+	posters/scattermap-calendar.pdf \
+	posters/pricegrid.pdf
 
 #
 #  images
@@ -39,7 +40,8 @@ IMAGES=\
 	out/scattermap.png \
 	out/mapination/daily-2007.gif \
 	out/mapination/blank.gif \
-	html/scattermap-calendar.html
+	html/scattermap-calendar.html \
+	html/pricegrid.html
 
 STATS=\
 	data/stats.tsv \
@@ -50,6 +52,14 @@ MONTHS=01 02 03 04 05 06 07 08 09 10 11 12
 posters:	$(POSTERS)
 
 images:	$(IMAGES)
+
+# minimal viable choropleth
+posters/pricegrid.pdf:	html/pricegrid.html
+	@mkdir -p posters
+	wkhtmltopdf -q --page-size a1 --orientation portrait html/pricegrid.html $@
+
+html/pricegrid.html:	data/pricegrid.tsv bin/pricegrid.php
+	bin/pricegrid.php < data/pricegrid.tsv > $@
 
 posters/scattermap-calendar.pdf:	html/scattermap-calendar.html
 	@mkdir -p posters
@@ -184,6 +194,9 @@ out/scatterps.png:	data/prices.tsv bin/scatterps.sh
 #
 #  stats
 #
+data/pricegrid.tsv:	data/pp.tsv bin/pricegrid.pl data/codepo_gb.tsv
+	cut -d'	' -f1,3 data/pp.tsv | bin/pricegrid.pl data/codepo_gb.tsv > $@
+
 data/pricebands.csv:	data/prices.tsv bin/pricebands.awk
 	bin/pricebands.awk < data/prices.tsv > $@
 
