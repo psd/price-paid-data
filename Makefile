@@ -56,14 +56,16 @@ images:	$(IMAGES)
 # minimal viable choropleth
 posters/pricegrid.pdf:	html/pricegrid.html
 	@mkdir -p posters
-	wkhtmltopdf -q --page-size a1 --orientation portrait html/pricegrid.html $@
+	wkhtmltopdf -q --page-size a1 --orientation portrait html/pricegrid.html /tmp/pricegrid.pdf
+	pdftk /tmp/pricegrid.pdf cat 1 output $@
 
 html/pricegrid.html:	data/pricegrid.tsv bin/pricegrid.php
-	bin/pricegrid.php < data/pricegrid.tsv > $@
+	bin/pricegrid.php >$@
 
 posters/scattermap-calendar.pdf:	html/scattermap-calendar.html
 	@mkdir -p posters
-	wkhtmltopdf -q --page-size a1 --orientation landscape html/scattermap-calendar.html $@
+	wkhtmltopdf -q --page-size a1 --orientation landscape html/scattermap-calendar.html /tmp/scattermap-calendar.pdf
+	pdftk /tmp/scattermap-calendar.pdf cat 1 output $@
 
 # poster of daily mapination scatter map plots
 html/scattermap-calendar.html:	out/mapination/sprites-1995-01.gif bin/scattermap-calendar.php
