@@ -1,12 +1,15 @@
 #!/usr/bin/env php
 <?php
+function draw_map($filename) {
+
     $max_count = 0;
-    $min_price = 999999999;
+    $min_price = 9999999999;
     $max_price = 0;
     $map = array();
 
     # read data into an array
-    while ($line = fgetcsv(STDIN, 0, '	')) {
+    $fp = fopen($filename, "r");
+    while ($line = fgetcsv($fp, 0, '	')) {
         $a = array(
             "count" => $line[1],
             "price" => $line[2]
@@ -16,6 +19,18 @@
         if ($a['count'] > $max_count) $max_count = $a['count'];
         $map[] = $a;
     }
+    fclose($fp);
+
+    foreach ($map as $n => $a) {
+        if ($n % 32 > 3) {
+            $price = $a['price'];
+            $blank = $price == 0 ? " blank" : "";
+            $c = round(8 * ($price - $min_price) / ($max_price - $min_price));
+            $k = round($price / 1000);
+            echo "<div class='hex point$blank q$c'>£${k}k</div>\n";
+        }
+    }
+}
 
 ?><!DOCTYPE html>
 <html>
@@ -69,8 +84,8 @@ a {
 
 .map {
   overflow: hidden;
-  width: 600mm;
-  margin: 80mm auto;
+  width: 590mm;
+  margin: 40mm auto;
 }
 .point {
   overflow: hidden;
@@ -105,15 +120,7 @@ a {
 <h1>Average price paid for residential property 1995–2014</h1>
 <div class="map">
 <?php
-    foreach ($map as $n => $a) {
-        if ($n % 32 > 3) {
-            $price = $a['price'];
-            $blank = $price == 0 ? " blank" : "";
-            $c = round(8 * ($price - $min_price) / ($max_price - $min_price));
-            $k = round($price / 1000);
-            echo "<div class='point$blank q$c'>£${k}k</div>\n";
-        }
-    }
+    draw_map('data/pricegrid.tsv');
 ?>
 </div>
 <div class="footer">
