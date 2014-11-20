@@ -1,10 +1,7 @@
 #!/usr/bin/env php
 <?php
-function draw_map($filename) {
+function draw_map($filename, $min_price, $max_price) {
 
-    $max_count = 0;
-    $min_price = 9999999999;
-    $max_price = 0;
     $map = array();
 
     # read data into an array
@@ -14,9 +11,6 @@ function draw_map($filename) {
             "count" => $line[1],
             "price" => $line[2]
         );
-        if (($a['price'] > 0) && ($a['price'] < $min_price)) $min_price = $a['price'];
-        if ($a['price'] > $max_price) $max_price = $a['price'];
-        if ($a['count'] > $max_count) $max_count = $a['count'];
         $map[] = $a;
     }
     fclose($fp);
@@ -27,7 +21,7 @@ function draw_map($filename) {
             $blank = $price == 0 ? " blank" : "";
             $c = round(8 * ($price - $min_price) / ($max_price - $min_price));
             $k = round($price / 1000);
-            echo "<div class='hex point$blank q$c'>£${k}k</div>\n";
+            echo "<div class='point$blank q$c'>£${k}k</div>\n";
         }
     }
 }
@@ -85,7 +79,7 @@ a {
 .map {
   overflow: hidden;
   width: 590mm;
-  margin: 40mm auto;
+  margin: 10mm auto;
 }
 .point {
   overflow: hidden;
@@ -103,6 +97,29 @@ a {
     background-color: #fff;
 }
 
+.yearly {
+  width: 590mm;
+  margin: 10mm auto;
+}
+.yearly .map {
+  float: left;
+  width: 56mm;
+  height: 72mm;
+  overflow: hidden;
+}
+.yearly .point {
+  width: 2mm;
+  height: 2mm;
+  margin: 0mm;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+h2 {
+    width: 100%;
+    text-align: center;
+}
+
 .q0 {background-color:rgb(255,245,240)}
 .q1 {background-color:rgb(254,224,210)}
 .q2 {background-color:rgb(252,187,161)}
@@ -118,15 +135,22 @@ a {
 <body>
 <div class="page">
 <h1>Average price paid for residential property 1995–2014</h1>
-<div class="map">
+<div class="map"> <?php draw_map('data/pricegrid.tsv', 62000, 344000); ?></div>
+<div class="yearly">
 <?php
-    draw_map('data/pricegrid.tsv');
+for ($year = 1995; $year <= 2014; $year++) {
+    echo "<div class='map'>\n";
+    draw_map("data/pricegrid/$year.tsv", 19000, 750000);
+    echo "<h2>$year</h2>\n";
+    echo "</div>\n";
+}
 ?>
 </div>
+
 <div class="footer">
     <img class="ogl" src="../images/ogl.png">
-    <p>This poster was created by @psd from Land Registry price-paid open data as a part of the Land Registry Hackday, November 2014.</p>
-    <p><span>Available from http://price-paid-data.whatfettle.com</span> © Crown copyright, published under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>.</p>
+    <p>This poster was created by @psd from Land Registry price-paid open data and is available from http://price-paid-data.whatfettle.com</p>
+    <p>© Crown copyright, published under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>.</p>
 </div>
 </div>
 </body>

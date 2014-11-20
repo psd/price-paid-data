@@ -59,7 +59,7 @@ posters/pricegrid.pdf:	html/pricegrid.html
 	wkhtmltopdf -q --page-size a1 --orientation portrait html/pricegrid.html /tmp/pricegrid.pdf
 	pdftk /tmp/pricegrid.pdf cat 1 output $@
 
-html/pricegrid.html:	data/pricegrid.tsv bin/pricegrid.php
+html/pricegrid.html:	data/pricegrid.tsv bin/pricegrid.php data/pricegrid/1995.tsv
 	bin/pricegrid.php >$@
 
 posters/scattermap-calendar.pdf:	html/scattermap-calendar.html
@@ -198,6 +198,13 @@ out/scatterps.png:	data/prices.tsv bin/scatterps.sh
 #
 data/pricegrid.tsv:	data/pp.tsv bin/pricegrid.pl data/codepo_gb.tsv
 	cut -d'	' -f1,3 data/pp.tsv | bin/pricegrid.pl data/codepo_gb.tsv > $@
+
+# brute-force yearly price-grids
+data/pricegrid/1995.tsv:	data/pp.tsv bin/pricegrid.pl data/codepo_gb.tsv
+	mkdir -p data/pricegrid
+	for year in `seq 1995 2014` ; do \
+		awk -F'	' '$$2 ~ /^'$$year'/ {print $$1 "	" $$3 }' data/pp.tsv | bin/pricegrid.pl data/codepo_gb.tsv > data/pricegrid/$$year.tsv ;\
+	done
 
 data/pricebands.csv:	data/prices.tsv bin/pricebands.awk
 	bin/pricebands.awk < data/prices.tsv > $@
