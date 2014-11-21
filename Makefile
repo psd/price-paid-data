@@ -41,7 +41,8 @@ IMAGES=\
 	out/mapination/daily-2007.gif \
 	out/mapination/blank.gif \
 	html/scattermap-calendar.html \
-	html/pricegrid.html
+	html/pricegrid.html \
+	html/pricegridix.html
 
 STATS=\
 	data/stats.tsv \
@@ -52,6 +53,15 @@ MONTHS=01 02 03 04 05 06 07 08 09 10 11 12
 posters:	$(POSTERS)
 
 images:	$(IMAGES)
+
+# grid of hexagonal choropleths
+posters/pricegridix.pdf:	html/pricegridix.html
+	@mkdir -p posters
+	wkhtmltopdf -q --page-size a1 --orientation landscape html/pricegridix.html /tmp/pricegridix.pdf
+	pdftk /tmp/pricegridix.pdf cat 1 output $@
+
+html/pricegridix.html:	data/pricegrid.tsv bin/pricegridix.php data/pricegrid/1995.tsv
+	bin/pricegridix.php >$@
 
 # minimal viable choropleth
 posters/pricegrid.pdf:	html/pricegrid.html
