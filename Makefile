@@ -15,7 +15,8 @@ all:	counts stats images posters
 #
 POSTERS=\
 	posters/scattermap-calendar.pdf \
-	posters/pricegrid.pdf
+	posters/pricegrid.pdf \
+	posters/pricegridix.pdf
 
 #
 #  images
@@ -57,7 +58,7 @@ images:	$(IMAGES)
 # grid of hexagonal choropleths
 posters/pricegridix.pdf:	html/pricegridix.html
 	@mkdir -p posters
-	wkhtmltopdf -q --page-size a1 --orientation landscape html/pricegridix.html /tmp/pricegridix.pdf
+	wkhtmltopdf -q --page-size a1 --orientation portrait html/pricegridix.html /tmp/pricegridix.pdf
 	pdftk /tmp/pricegridix.pdf cat 1 output $@
 
 html/pricegridix.html:	data/pricegrid.tsv bin/pricegridix.php data/pricegrid/1995.tsv

@@ -18,13 +18,18 @@ function draw_map($filename, $min_price=999999999, $max_price=0) {
     fclose($fp);
 
     foreach ($map as $n => $a) {
+        if ($n % 32 == 3) {
+            #echo "<div class='hex-row'>\n";
+        }
         if ($n % 32 > 3) {
             $price = $a['price'];
-
-            $blank = $price == 0 ? " blank" : "";
-            $c = round(8 * ($price - $min_price) / ($max_price - $min_price));
+            $c = ($price == 0) ? "blank" : "q" . round(8 * ($price - $min_price) / ($max_price - $min_price));
+            $even = $n % 2 ? "" : "even";
             $k = round($price / 1000);
-            echo "<div class='point$blank q$c'>£${k}k</div>\n";
+            echo "  <div class='hex $c n$n $even'><div class='left'></div><div class='middle'>£${k}k</div><div class='right'></div></div>\n";
+        }
+        if ($n % 32 == 31) {
+            #echo "</div>\n";
         }
     }
 }
@@ -87,55 +92,84 @@ a {
 .map {
   float: left;
   overflow: hidden;
-  margin: 0 5mm;
-  width: 140mm;
-  height: 175mm;
+  margin: 0 15mm;
+  width: 120mm;
+  height: 170mm;
   overflow: hidden;
-}
-
-.point {
-  overflow: hidden;
-  height: 4.9mm;
-  width: 4.9mm;
-  line-height: 4.9mm;
-  margin: 0mm;
-  background-color: #888;
-  float: left;
-  font-size: 1.5mm;
-  text-align: center;
-  font-family: "Helvetica Neue", "Helvetica", sans-serif;
-  color: #fff;
-  overflow: hidden;
-}
-
-.blank {
-    color: #fff;
-    background-color: #fff;
+  position: relative;
 }
 
 h2 {
     width: 100%;
     text-align: center;
+    position: absolute;
+    z-index: -1;
+    bottom: 5mm;
 }
 
-.q0 {background-color:#f7fcf5}
-.q1 {background-color:#e5f5e0}
-.q2 {background-color:#c7e9c0}
-.q3 {background-color:#a1d99b}
-.q4 {background-color:#74c476}
-.q5 {background-color:#41ab5d}
-.q6 {background-color:#238b45}
-.q7 {background-color:#006d2c}
-.q8 {background-color:#00441b}
+<?php
+    $q = array('#f7fcf5', '#e5f5e0', '#c7e9c0', '#a1d99b', '#74c476', '#41ab5d', '#238b45', '#006d2c', '#00441b');
+
+    foreach ($q as $n => $c) {
+        echo ".hex.q$n .left { border-right: 1.41mm solid $c }\n";
+        echo ".hex.q$n .middle { background-color: $c }\n";
+        echo ".hex.q$n .right { border-left: 1.41mm solid $c }\n";
+    }
+
+?>
+
+.hex.blank .left { border-right: 1.41mm solid transparent; }
+.hex.blank .middle { background-color: solid transparent; color: transparent; }
+.hex.blank .left { border-left: 1.41mm solid transparent; }
+
+.hex {
+    float: left;
+    margin-right: -1.225mm;
+    margin-bottom: -2.355mm;
+}
+.hex .right,
+.hex .left {
+    float: left;
+    width: 0;
+    border-top: 2.45mm solid transparent;
+    border-bottom: 2.45mm solid transparent;
+}
+.hex .middle {
+    float: left;
+    width: 2.826mm;
+    height: 4.9mm;
+    line-height: 4.9mm;
+    text-align: center;
+    font-family: "Helvetica Neue", "Helvetica", sans-serif;
+    font-size: 1mm;
+    color: #fff;
+}
+.hex-row {
+    clear: left;
+}
+.hex.even {
+    margin-top: 2.5mm;
+}
+
+/* fixup */
+.hex.n20 {
+    margin-top: 5mm;
+    margin-left: -4mm;
+    padding-right: 2mm;
+}
+.hex.even.n966 {
+    margin-left: 8.7mm;
+}
 
 </style>
 </head>
 <body>
 <div class="page">
-<h1>Change in distribution of price paid for residential property</h1>
+<h1>Distribution of price paid for residential property</h1>
 <div class="grid">
 <?php
 for ($year = 1995; $year <= 2014; $year++) {
+#for ($year = 1995; $year <= 1996; $year++) {
     echo "<div class='map'>\n";
     draw_map("data/pricegrid/$year.tsv");
     echo "<h2>$year</h2>\n";
