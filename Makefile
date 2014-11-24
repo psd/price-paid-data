@@ -16,7 +16,7 @@ all:	counts stats images posters
 POSTERS=\
 	posters/scattermap-calendar.pdf \
 	posters/pricegrid.pdf \
-	posters/pricegridix.pdf
+	posters/pricegridix.pdf 
 
 #
 #  images
@@ -43,7 +43,8 @@ IMAGES=\
 	out/mapination/blank.gif \
 	html/scattermap-calendar.html \
 	html/pricegrid.html \
-	html/pricegridix.html
+	html/pricegridix.html \
+	html/pricegridtx.html
 
 STATS=\
 	data/stats.tsv \
@@ -55,6 +56,15 @@ posters:	$(POSTERS)
 
 images:	$(IMAGES)
 
+# choropleth of prices and transactions
+posters/pricegridtx.pdf:	html/pricegridtx.html
+	@mkdir -p posters
+	wkhtmltopdf -q --page-size a1 --orientation portrait html/pricegridtx.html /tmp/pricegridtx.pdf
+	pdftk /tmp/pricegridtx.pdf cat 1 output $@
+
+html/pricegridtx.html:	data/pricegrid.tsv bin/pricegridtx.php data/pricegrid/1995.tsv
+	bin/pricegridtx.php > $@
+
 # grid of hexagonal choropleths
 posters/pricegridix.pdf:	html/pricegridix.html
 	@mkdir -p posters
@@ -62,7 +72,7 @@ posters/pricegridix.pdf:	html/pricegridix.html
 	pdftk /tmp/pricegridix.pdf cat 1 output $@
 
 html/pricegridix.html:	data/pricegrid.tsv bin/pricegridix.php data/pricegrid/1995.tsv
-	bin/pricegridix.php >$@
+	bin/pricegridix.php > $@
 
 # minimal viable choropleth
 posters/pricegrid.pdf:	html/pricegrid.html
@@ -71,7 +81,7 @@ posters/pricegrid.pdf:	html/pricegrid.html
 	pdftk /tmp/pricegrid.pdf cat 1 output $@
 
 html/pricegrid.html:	data/pricegrid.tsv bin/pricegrid.php data/pricegrid/1995.tsv
-	bin/pricegrid.php >$@
+	bin/pricegrid.php > $@
 
 posters/scattermap-calendar.pdf:	html/scattermap-calendar.html
 	@mkdir -p posters
