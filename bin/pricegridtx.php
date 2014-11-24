@@ -107,7 +107,6 @@ a {
   z-index: -1;
   border-radius: 50%;
   opacity: 0.25;
-  box-shadow: inset -25px -25px 40px rgba(8,8,8,.35);
 }
 
 .yearly {
@@ -126,9 +125,6 @@ a {
   margin: 0mm;
   text-indent: -10000mm;
   white-space: nowrap;
-}
-.yearly .circle {
-  box-shadow: inset -1px -1px 2px rgba(8,8,8,.35);
 }
 h2 {
     width: 100%;
@@ -158,7 +154,6 @@ h2 {
     text-align: right;
     float: left;
     margin-right: 2.5mm;
-    box-shadow: inset -25px -25px 40px rgba(9,9,9,.2);
 }
 
 </style>
