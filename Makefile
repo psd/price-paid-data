@@ -44,7 +44,8 @@ IMAGES=\
 	html/scattermap-calendar.html \
 	html/pricegrid.html \
 	html/pricegridix.html \
-	html/pricegridtx.html
+	html/pricegridtx.html \
+	html/pricegridtx2.html
 
 STATS=\
 	data/stats.tsv \
@@ -55,6 +56,15 @@ MONTHS=01 02 03 04 05 06 07 08 09 10 11 12
 posters:	$(POSTERS)
 
 images:	$(IMAGES)
+
+# grid of choropleth of prices and transactions
+posters/pricegridtx2.pdf:	html/pricegridtx2.html
+	@mkdir -p posters
+	wkhtmltopdf -q --page-size a1 --orientation portrait html/pricegridtx2.html /tmp/pricegridtx2.pdf
+	pdftk /tmp/pricegridtx2.pdf cat 1 output $@
+
+html/pricegridtx2.html:	data/pricegrid.tsv bin/pricegridtx2.php data/pricegrid/1995.tsv
+	bin/pricegridtx2.php > $@
 
 # choropleth of prices and transactions
 posters/pricegridtx.pdf:	html/pricegridtx.html
