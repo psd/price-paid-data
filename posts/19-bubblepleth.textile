@@ -1,8 +1,8 @@
 <em>This is day 19 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data</em>
 
-"Yesterday":http://blog.whatfettle.com/2014/11/20/one-csv-thirty-stories-18-choropleth/ I made a simple choropleth map of average prices. Today I wanted to iterate on this hack. Once again this took me longer than expected, this time because I didn't much like the results.
+"Yesterday":http://blog.whatfettle.com/2014/11/20/one-csv-thirty-stories-18-choropleth/ I made a simple choropleth map of average prices. Today I wanted to iterate on this hack. Once again this took me longer than expected, this time because I didn't like the results.
 
-First-off it was a little remiss of me not to call out one of the design decisions in yesterday's post. The colours are scaled across the entire range of yearly maps, illustrating how house prices have hotted up over twenty years. However there is an alternative to scale the prices within each year to show how the distribution of prices have moved over twenty years: 
+First-off it was a little remiss of me not to call out one of the design decisions in yesterday's post. The colours are scaled across the entire range of yearly maps, illustrating how house prices have hotted up over twenty years. There is an alternative to scale the prices within each year to show how the distribution of prices have moved over twenty years: 
 
 <a href="https://www.flickr.com/photos/psd/15233560543" title="Hotting-up"><img src="https://farm9.staticflickr.com/8587/15233560543_55268933ff_c.jpg" width="800" height="252" alt="Hotting-up"></a>
 
@@ -14,31 +14,32 @@ This wasn't too tricky thanks to the "CSS tricks":http://jtauber.github.io/artic
 
 <a href="https://www.flickr.com/photos/psd/15853161675" title="Atomic cauliflowers"><img src="https://farm8.staticflickr.com/7503/15853161675_64f16c1777_c.jpg" width="565" height="800" alt="Atomic cauliflowers"></a>
 
-Using the grid values with these shapes was a bit of cheat; I really should have recalculated the averages based on the geometry of each hexagon, and worked harder to make them work in any browser beyond Firefox and Chrome, but this experiment was enough to convince me I really didn't like the look of where this hack was going. Hexagons are just not my thing, unless I'm playing Settlers of Catan:.
+Using the grid values with these shapes was a bit of cheat; I really should have recalculated the averages based on the geometry of each hexagon, and worked harder to make them work in any browser beyond Firefox and Chrome, but this experiment was enough to convince me I really didn't like the look of where the hack was heading. Hexagons are just not my bag, unless I'm playing Settlers of Catan:.
 
 <a href="https://www.flickr.com/photos/psd/1175737778" title="Settlers of Catan by Paul Downey, on Flickr"><img src="https://farm2.staticflickr.com/1233/1175737778_2682a7af16_s.jpg" width="75" height="75" alt="Settlers of Catan"></a>
 
-So I took a different tack and experimented with turning each square div into a circle with a single line of CSS:
+So I decided to try a different tack and experimented with turning each square div into a circle using a single line of CSS:
 
 bc. .circle { border-radius: 50% }
 
-and then sizing the div to show both the average price and number of transactions for each postcode:
+I then resized each div to show both the average price and number of transactions for each postcode:
 
 <a href="https://www.flickr.com/photos/psd/15868805122" title="Blobs"><img src="https://farm8.staticflickr.com/7500/15868805122_041255ea76_c.jpg" width="713" height="800" alt="Blobs"></a>
 
-This looked more promising, but , so I played quite a bit, futzing around with the size, shape and colour of these bubbles:
+This looked more promising, but not great, so I played quite a bit, experimenting with the size, shape and colour of the bubbles:
 
 <a href="https://www.flickr.com/photos/psd/15681656470" title="Futzing"><img src="https://farm8.staticflickr.com/7569/15681656470_349021b762_c.jpg" width="800" height="314" alt="Futzing"></a>
 
-The biggest difficulty was finding a way of revealing the map, but illustrating the massive difference in the number of transactions in London as opposed to the surrounding area. A logarithmic scale might have helped, but in the end I settled on spheres, which meant taking the cubed-root of the number of transactions at each postcode. A small amount of border-shadow on each sphere:
+The biggest difficulty was finding a way of revealing the map, illustrating the massive difference in the price-paid and number of transactions within London as opposed to the immediately surrounding areas. A logarithmic scale might have helped, but in the end I settled on spheres, which meant taking the cubed-root of the number of transactions at each postcode and applying a small amount of border-shadow on each sphere:
 
 <a href="https://www.flickr.com/photos/psd/15869121901" title="CSS spheres"><img src="https://farm8.staticflickr.com/7480/15869121901_150a20721e_c.jpg" width="800" height="517" alt="CSS spheres"></a>
 
-However this simply doesn't work. I had to make the spheres transparent so you can see the overlaps, but the resulting darker colours say nothing about the price at each location, rather blurs both the iscrepancy in the number of transactions and the price, which can vary in adjacent postcodes:
+However this simply doesn't work. I had to make the spheres transparent, but that creates darker colours when bubbles overlap, which say nothing about the price at that location, and blurs both the discrepancy in the number of transactions and the price which can vary greatly in adjacent postcodes:
 
 <a href="https://www.flickr.com/photos/psd/15685185209" title="pricegridtx"><img src="https://farm9.staticflickr.com/8616/15685185209_56802393a3_c.jpg" width="566" height="800" alt="pricegridtx"></a>
 
-So I spent even more time futzing with this page to no avail:
+And, as mentioned previously, transparency and gradients don't work well in postscript, making the resultant PDFs large and unprintable. So I spent even more time futzing with this page, trying to flog a dead-tree, to no avail:
 
+<a href="https://www.flickr.com/photos/psd/15875557435" title="pricegridtx2 by Paul Downey, on Flickr"><img src="https://farm8.staticflickr.com/7540/15875557435_8a0b9f21b7_c.jpg" width="565" height="800" alt="pricegridtx2"></a>
 
-Literally the bottom line: today I iterated wildly, but failed to improve on "yesterday":http://blog.whatfettle.com/2014/11/20/one-csv-thirty-stories-18-choropleth/, but I've still at least one more idea I want to try out with this data "tomorrow".
+Literally the bottom line: today I iterated wildly, but failed to improve on "yesterday":http://blog.whatfettle.com/2014/11/20/one-csv-thirty-stories-18-choropleth/. I should probably move along,  but I've still at least one more idea I want to try out with this data "tomorrow".
