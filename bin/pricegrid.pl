@@ -8,8 +8,8 @@ use warnings;
 use POSIX;
 
 my $geocodes = shift || "data/codepo_gb.tsv";
-my $width = 32;
-my $height = 32;
+my $width = shift || 32;
+my $height = shift || 32;
 my $max_easting = 660000;
 my $max_northing = 660000;
 my %postcode = ();

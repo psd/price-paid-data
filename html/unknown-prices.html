@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Unknown Prices</title>
+<style>
+body {
+  width: 100%;
+  background: #000;
+  margin: 0 auto;
+  font-family: "Helvetica Neue";
+  color: #fff;
+}
+
+.poster {
+  width: 600px;
+  margin: 40px auto;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.area {
+  fill: #000;
+}
+
+#lines {
+  margin-top: -10px;
+}
+
+.line {
+  stroke-width: 2;
+  stroke: #eee;
+}
+
+h1 {
+  font-weight: lighter;
+  text-transform: uppercase;
+  text-align: justify;
+  font-size: 80px;
+  letter-spacing: 3px;
+}
+
+h2 {
+  font-weight: normal;
+  text-align: justify;
+  text-transform: uppercase;
+  font-size: 65px;
+  color: #eee;
+}
+
+</style>
+</head>
+<body>
+<div class="poster">
+  <h1>Land Registry</h1>
+  <div id="lines"></div>
+  <h2>Unknown Prices</h2>
+</div>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var width = 600;
+var height = 600;
+
+var x = d3.time.scale()
+    .domain([0, 1])
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .domain([0, 1])
+    .range([height, 0]);
+
+var area = d3.svg.area()
+    .x(function(d) { return x(d.x); })
+    .y1(function(d) { return y(d.y); })
+    .interpolate('basis');
+
+var line = d3.svg.line()
+    .x(function(d) { return x(d.x); })
+    .y(function(d) { return y(d.y); })
+    .interpolate('basis');
+
+var svg = d3.select("#lines")
+  .append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+function draw(data) {
+  svg.selectAll('g.wave')
+    .data(data)
+    .enter()
+    .append('path')
+    .attr("class", "line");
+
+  svg.selectAll('path.line')
+    .attr("d", line);
+}
+
+function load(path) {
+  d3.text(path, function(text) {
+    var tsv = d3.tsv.parse("n\tcount\tprice\n" + text);
+
+    var max_count = 1200000;
+    var max_price = 350000;
+
+    data = d3.range(0, 31).map(function(row) {
+      var y0 = 1 - (row / 30);
+      var a = d3.range(0, 63).map(function(col) {
+        return {
+          x: col / 80,
+          y: y0 + (tsv[row*64 + col].price / max_price /15)
+        };
+      })
+      a.push({y:y0, x:63/80});
+      a.push({y:y0, x:1});
+      return a;
+    });
+
+    draw(data);
+  });
+}
+
+load("../data/pricegrid64.tsv");
+</script>
+</body>
+</html>

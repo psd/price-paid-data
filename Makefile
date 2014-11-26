@@ -49,7 +49,8 @@ IMAGES=\
 
 STATS=\
 	data/stats.tsv \
-	data/pricebands.csv
+	data/pricebands.csv \
+	data/pricegrid64.tsv
 
 MONTHS=01 02 03 04 05 06 07 08 09 10 11 12
 
@@ -227,6 +228,9 @@ out/scatterps.png:	data/prices.tsv bin/scatterps.sh
 #
 #  stats
 #
+data/pricegrid64.tsv:	data/pp.tsv bin/pricegrid.pl data/codepo_gb.tsv
+	cut -d'	' -f1,3 data/pp.tsv | bin/pricegrid.pl data/codepo_gb.tsv 64 > $@
+
 data/pricegrid.tsv:	data/pp.tsv bin/pricegrid.pl data/codepo_gb.tsv
 	cut -d'	' -f1,3 data/pp.tsv | bin/pricegrid.pl data/codepo_gb.tsv > $@
 
