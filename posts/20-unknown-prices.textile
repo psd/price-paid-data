@@ -1,0 +1,25 @@
+<em>This is day 20 of "One CSV, 30 stories":http://blog.whatfettle.com/2014/10/13/one-csv-thirty-stories/ a series of articles exploring "price paid data":https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads from the Land Registry found on GOV.UK. The code for this and the other articles is available as open source from "GitHub":https://github.com/psd/price-paid-data</em>
+
+"Yesterday":http://blog.whatfettle.com/2014/11/25/one-csv-thirty-stories-19-bubblepleth/ was hard work for no avail, so today for a quick-win I've fallen back on something reasonably obvious, using d3 to plot the average price-per-postcode to form a well-known album cover:
+
+<div class="w_iframe"><div class="h_iframe">
+<iframe width="100%" src="http://psd.github.io/price-paid-data/html/unknown-prices.html"></iframe>
+</div></div>
+[<a href="http://psd.github.io/price-paid-data/html/unknown-prices.html">view separately</a>]
+
+Er, why trot out that old trope, you might ask. Well I was 16 when Joy Division released "Unknown Pleasures":http://en.wikipedia.org/wiki/Unknown_Pleasures and it spoke to me, not least because of Peter Saville's iconic album cover which had no text, but what appeared to be an intriguing, futuristic, computer rendered landscape.  I particularly remember trying to recreate the image using 6502 machine code on my friend's dad's "Rockwell AIM 65":http://en.wikipedia.org/wiki/AIM-65 the only computer I'd seen at that point with any kind of output beyond seven-segment display. The results on ephemeral, thermal printer paper are sadly long-gone. I also remember being thrilled to see the same image appear later the same year, as the lander descended in "Alien":http://en.wikipedia.org/wiki/Alien_%28film%29:
+
+<a href="http://psd.tumblr.com/post/103707198587/alien-1979-snagged-by-eric-carl"><img src="http://31.media.tumblr.com/755e1569670eaf5ca639d748dd30adbb/tumblr_nfos4nfkBT1qz4bcto1_500.jpg"></a>
+
+Growing up in the north-east of England, we were very aware of "Ridley Scott's":http://en.wikipedia.org/wiki/Ridley_Scott local heritage (he's a "monkey hanger":http://en.wikipedia.org/wiki/Monkey_hanger), and since them I've felt a similar, strange bond with other people who have found ways of paying homage to this image which includes a number of people I know including "Dan Catt":http://revdancatt.com/ whose "Project CAT820":http://revdancatt.com/2013/03/06/project-cat820-joy-divisualization uses Processingjs, a great little library which I've experimented with myself, and "written about here, before":http://blog.whatfettle.com/2008/05/11/tiddlyprocessing/.  But it was "Brian Suda":http://suda.co.uk/'s image of Iceland which captured my imagination:
+
+<a href="https://www.flickr.com/photos/suda/5384299394" title="Unknown Pleasures: Iceland by Brian Suda, on Flickr"><img src="https://farm6.staticflickr.com/5217/5384299394_d6c52bb84f_z.jpg" width="640" height="452" alt="Unknown Pleasures: Iceland"></a>
+
+And I have lost far too much time exploring "Elevation Lines":http://mroctopus.net/geo/elevation-lines.html.
+
+The research tools available to today's 16 year old are very different to those in 1979, however I'm somewhat embarrassed to admit I had little idea where this visualisation originated until Jeremy wrote about the data behind the design of "FACT 10":https://adactio.com/journal/1489 and the way "Jocelyn Bell Burnell's":https://adactio.com/journal/6531 ground-breaking pulsar discovery was explained using the original visualisation published in the "Cambridge Encyclopaedia of Astronomy. I'm not bothered about attribution":http://blog.whatfettle.com/2008/10/24/on-the-vanity-of-demanding-attribution/ and ultimately I'm cool with remix culture, which this is a great example, but I'm less sanguine about the how the work of great women like Jocelyn goes mundanely unacknowledged. Anyway, we hopefully, are moving towards a different age. Here's Peter on the story behind the cover, and the impact of his design:
+
+<iframe width="640" height="360" src="//www.youtube.com/embed/BxyDT11RD04" frameborder="0" allowfullscreen></iframe>.
+
+So it might be a lazy trope, and it's definitely very late for me to jump on the bandwagon, but I still find it an aesthetically pleasing image, and it speaks directly to my inner teenager. "Tomorrow" I'll start to dig into addresses.
+
