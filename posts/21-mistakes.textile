@@ -1,0 +1,179 @@
+Mistakes were made
+
+I now know quite a few people who work for the Land Registry, regularly hang out with some of the digital team, follow "@LandRegGov":https://twitter.com/LandRegGov on Twitter, and here I am writing these thirty love-notes to their open data, so was a little disappointed to only hear only third-hand via email about a recent Land Registry blog post:
+
+bq. "Price Paid Data – Improving data quality":http://blog.landregistry.gov.uk/price-paid-data-improving-data-quality/ 
+
+That's a fairly jaunty title, and about a subject entirely relevant to my interests!
+
+bq. While we strive to release data of the highest quality we know sometimes that we could do better. This month we are improving our Price Paid Dataset by removing historic transactions that were added in error.
+
+My heart sinks.
+
+bq. Recently a customer reported some duplicate entries in our 2003 and 2004 Price Paid Dataset. After investigation we found there had been an internal error with a process used to cancel applications. Price paid entries were not removed when they should have been. That process changed early in 2005. We’ve now corrected the data and will be removing around 48,000 transactions from a dataset that contains over 19 million. There were approximately 18,000 duplicates in 2003, 30,000 in 2004 and less than 100 from 2005.
+
+Less than 0.25% of records over twenty years doesn't sound too bad, but if 30,000 of the 1,261,448 transactions in 2004 are duplicate, that's an 2.4% increase in volume, or roughly 1 in every 40 transactions are ones which in wouldn't be present in other years. That could be quite bad news for these posts.
+
+bq. The invalid entries will be removed from each version of the yearly files that we publish through GOV.UK and from the single complete file of all Price Paid transactions. The change will also be applied to the open data used by Price Paid Report Builder in the same month.
+
+That's cool.
+
+bq. We will be publishing a file on GOV.UK that contains details of all the invalid entries on 28 November 2014. The file will be in the same form as the monthly update, which can be used to update data stores. Each record in the update files will have a record status set to ‘D’.
+
+Well the 28th was last Friday, so I created a fresh clone of "the repository":https://github.com/psd/price-paid-data and ran "make" to download the latest version of the price-file and rebuild the data. That took a while.
+
+Looking at the status, there are no 'D' records in new file:
+
+bc. cat old/data/status.tsv new/data/status.tsv
+19325571    A
+19455964    A
+
+It did occur to me there might be duplicate records within the CSV file, so checked, firstly by looking for duplicate transaction identifiers:
+
+bc. $ awk '!_[$1]++' < pp-complete.csv > pp-deduped.csv
+$ cmp pp-complete.csv pp-deduped.csv
+[no difference]
+
+and then again by uniquely sorting the entire file:
+
+bc. $ wc -l pp-complete.tsv
+
+$ cat pp-complete.csv | iconv -f ISO-8859-1 -t UTF-8 | sort -u > pp-complete-uniq.csv
+$ wc -l pp-complete-uniq.csv
+19325571
+
+I then wanted to compare the old CSV with the new version. Ordinarily I'd use "opendiff":http://blog.whatfettle.com/2005/12/05/i-opendiff/ to visually compare files, but these files are way too big for that. The records could be in a different order, so I sorted them by date and then ran them through the good old Unix "diff":http://en.wikipedia.org/wiki/Diff_utility:
+
+bc. $ cat old/data/pp-complete-old.csv | iconv -f ISO-8859-1 -t UTF-8 | sort -t, -k3 > old/data/pp-complete-sorted.tsv
+$ cat new/data/pp-complete.csv | iconv -f ISO-8859-1 -t UTF-8 | sort -t, -k3 > new/data/pp-complete-sorted.tsv
+$ diff old/data/pp-complete-sorted.csv new/data/pp-complete-sorted.csv  > diffs.txt
+
+On my quite constrained, otherwise busy laptop, running on battery whilst I was "sat on a delayed train":https://twitter.com/psd/status/539342955065405441, that took a bit of time:
+
+bc. real    8m9.073s
+user    0m44.637s
+sys 3m57.099s
+
+Quite a while, but not long enough to make me feel a need to provision and spin up a Hadoop cluster.
+
+I put the output into a "gist":https://gist.github.com/psd/81f49b1429318fcdb2c2. We can then get a feel for how much has changed using "diffstat"http://invisible-island.net/diffstat/:
+
+bc. $ diffstat diffs.txt 
+unknown |243657 +++++++++++++++++++++++++++++++++++++++++++++++++---------------
+1 file changed, 187025 insertions(+), 56632 deletions(-)
+
+Though that doesn't quite tell the story. So I split the CSV into a file for each year:
+
+bc. $ awk -F, '{ file="years/" substr($3,2,4) ".csv"; print > file}' pp-complete-sorted.tsv
+
+then looked at the difference for each year:
+
+bc. $ for i in *; do diff $i ../../../price-paid-data/data/years/$i > $i.txt ; done
+$ ls *txt | xargs -L 1 -t diffstat
+
+bc. 1995 |  140 +++++++++++++++++++++++++++++++++++++---------------------------
+ 1 file changed, 81 insertions(+), 59 deletions(-)
+ 1996 |  202 ++++++++++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 120 insertions(+), 82 deletions(-)
+ 1997 |  194 ++++++++++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 116 insertions(+), 78 deletions(-)
+ 1998 |  205 ++++++++++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 122 insertions(+), 83 deletions(-)
+ 1999 |  244 ++++++++++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 147 insertions(+), 97 deletions(-)
+ 2000 |  282 +++++++++++++++++++++++++++++++++++-----------------------------
+ 1 file changed, 156 insertions(+), 126 deletions(-)
+ 2001 |  366 +++++++++++++++++++++++++++++++++++-----------------------------
+ 1 file changed, 203 insertions(+), 163 deletions(-)
+ 2002|  365 ++++++++++++++++++++++++++++++++++------------------------------
+ 1 file changed, 194 insertions(+), 171 deletions(-)
+ 2003 |19166 ----------------------------------------------------------------
+ 1 file changed, 199 insertions(+), 18967 deletions(-)
+ 2004 |30190 ----------------------------------------------------------------
+ 1 file changed, 209 insertions(+), 29981 deletions(-)
+ 2005 |  396 +++++++++++++++++++++++++++-------------------------------------
+ 1 file changed, 169 insertions(+), 227 deletions(-)
+ 2006 |  415 +++++++++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 220 insertions(+), 195 deletions(-)
+ 2007 |  494 ++++++++++++++++++++++++++++++++++------------------------------
+ 1 file changed, 265 insertions(+), 229 deletions(-)
+ 2008 |  229 ++++++++++++++++++++++++++++++++--------------------------------
+ 1 file changed, 118 insertions(+), 111 deletions(-)
+ 2009 |  233 +++++++++++++++++++++++++++++++++++-----------------------------
+ 1 file changed, 129 insertions(+), 104 deletions(-)
+ 2010 |  278 +++++++++++++++++++++++++++++++++-------------------------------
+ 1 file changed, 147 insertions(+), 131 deletions(-)
+ 2011 |  244 ++++++++++++++++++++++++++++++++++------------------------------
+ 1 file changed, 131 insertions(+), 113 deletions(-)
+ 2012 |  370 +++++++++++++++++++++++++++++++++++-----------------------------
+ 1 file changed, 208 insertions(+), 162 deletions(-)
+ 2013 | 1434 +++++++++++++++++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 1014 insertions(+), 420 deletions(-)
+ 2014 |188210 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 183077 insertions(+), 5133 deletions(-)
+
+That's a lot of changes, and not just in the highlighted years. But there's no replacement for digging into the output. Mostly these seem to be changes to addresses, such as:
+
+bc. 9715c9715
+< "{AFC934E1-B31A-473B-960C-0309094FE2E3}","106000","1995-01-09 00:00","SW11 3BL","F","N","F","533","FLAT ABOVE SHOP","BATTERSEA PARK ROAD","LONDON","LONDON","WANDSWORTH","GREATER LONDON","A"^M
+---
+> "{AFC934E1-B31A-473B-960C-0309094FE2E3}","106000","1995-01-09 00:00","SW11 3BL","F","N","F","533A","","BATTERSEA PARK ROAD","","LONDON","WANDSWORTH","GREATER LONDON","A"^M
+
+and:
+
+bc. 8447592c8447867
+< "{131F8F5B-E37E-4AE2-80A7-8EC48F733942}","85000","2002-11-08 00:00","LN8 6JN","S","N","F","ROSEWAITE, 1","","PANTON ROAD","BENNIWORTH","MARKET RASEN","EAST LINDSEY","LINCOLNSHIRE","A"^M
+---
+> "{131F8F5B-E37E-4AE2-80A7-8EC48F733942}","85000","2002-11-08 00:00","LN8 6JH","S","N","F","ROSEWAITE","","","BENNIWORTH","MARKET RASEN","EAST LINDSEY","LINCOLNSHIRE","A"^M
+
+or even:
+
+bc. 8605627c8605907
+< "{140054FA-58F2-4F19-BF3B-3B8FB818EFB4}","36000","2002-12-17 00:00","LL42 1AT","T","N","F","GLANLLYN","FLAT 2","WATER STREET","BARMOUTH","BARMOUTH","GWYNEDD","GWYNEDD","A"^M
+---
+> "{140054FA-58F2-4F19-BF3B-3B8FB818EFB4}","36000","2002-12-17 00:00","LL42 1AT","T","N","F","BRON LLYN","","WATER STREET","","BARMOUTH","GWYNEDD","GWYNEDD","A"^M
+
+As discussed on "Day 13":http://blog.whatfettle.com/2014/11/06/one-csv-thirty-stories-13-postcodes/ addresses are a fluffy, movable feast, and these changes further reduce my confidence in the use of informal lines of text as a means of identifying a location. I aim to dig further into addresses in the next post.
+
+Then there are records where other fields such as the property-type has changed, as in this example where a Semi-detached house sold in January 1995 is now recorded as being a Detached house:
+
+bc. 25601c25601
+< "{1FB96B78-6395-4C6F-9A7C-F1D8ABC78EB6}","65000","1995-01-20 00:00","NR14 7SX","S","N","F","22","","CAWSTONS MEADOW","PORINGLAND","NORWICH","SOUTH NORFOLK","NORFOLK","A"^M
+---
+> "{1FB96B78-6395-4C6F-9A7C-F1D8ABC78EB6}","65000","1995-01-20 00:00","NR14 7SX","D","N","F","22","","CAWSTONS MEADOW","PORINGLAND","NORWICH","SOUTH NORFOLK","NORFOLK","A"^M
+
+I wondered if a more recent transaction might have impacted this early record:
+
+bc. $ grep "NR14 7SX" old/data/pp-complete-sorted.tsv  | grep '"22"'
+"{1FB96B78-6395-4C6F-9A7C-F1D8ABC78EB6}","65000","1995-01-20 00:00","NR14 7SX","S","N","F","22","","CAWSTONS MEADOW","PORINGLAND","NORWICH","SOUTH NORFOLK","NORFOLK","A"
+"{B78457EE-8921-4211-837F-27A3EE2F7895}","177500","2007-09-17 00:00","NR14 7SX","S","N","F","22","","CAWSTONS MEADOW","PORINGLAND","NORWICH","SOUTH NORFOLK","NORFOLK","A"
+
+bc. $ grep "NR14 7SX" new/data/pp-complete-sorted.tsv  | grep '"22"'
+"{1FB96B78-6395-4C6F-9A7C-F1D8ABC78EB6}","65000","1995-01-20 00:00","NR14 7SX","D","N","F","22","","CAWSTONS MEADOW","PORINGLAND","NORWICH","SOUTH NORFOLK","NORFOLK","A"
+"{B78457EE-8921-4211-837F-27A3EE2F7895}","177500","2007-09-17 00:00","NR14 7SX","D","N","F","22","","CAWSTONS MEADOW","PORINGLAND","NORWICH","SOUTH NORFOLK","NORFOLK","A"
+
+It seems not. That's a bit worrying. This kind of detail shouldn't just change arbitrarily in what should after all be an immutable, tamper-proof register.
+
+bq. Despite the number of transactions affected, we can confirm that there is no impact on the House Price Index figure published each month. However sales volume figures will change.
+
+That does sound quite hopeful, and is borne out by the difficulty of spotting differences visualisations from previous posts. On hearing the news I was particularly worried about losing some of the more interesting anomalies in the heatmap we made into a poster and pinned up on the Land Registry canteen wall:
+
+<a href="https://www.flickr.com/photos/psd/15303511564" title="New data by Paul Downey, on Flickr"><img src="https://farm8.staticflickr.com/7470/15303511564_4bed91160f_o.png" width="635" height="249" alt="New data"></a>
+
+but there's not much visible difference, if any, between the two plots. Phew!
+
+So after being initially irritated by the title of this post, the "non-apology apology":http://en.wikipedia.org/wiki/Non-apology_apology, and disappointed about how I came to hear about the issue, I think this is actually a very cool story for open data, and I have to applaud the Land Registry for their openness.
+
+People working in Government are often expected to be infallible and get a lot of criticism when they're not. Often that's because there's no alternative but to use their information or service, which one of the reasons being called a "customer" when you're "the user":http://russelldavies.typepad.com/planning/2014/06/consumers-users-people-mammals.html of a public service without any alternative can feel quite insulting. As the canonical data provider, such circumstances can make it very easy to let perfection become the enemy of good, and limit the amount of data released. Although I'm pushing the Land Registry to do better in these posts, I remain best pleased the Land Registry releases this data openly, and in convenient form. Mistakes will happen, but admitting fault like this quickly and openly is great, and exactly the right thing to do.
+
+This issue is a great example of how publishing open data can really help improve its quality. I suspect the "customer feedback" must have been based on knowledge of particular transactions. "Richard":http://www.memespring.co.uk/ has suggested ways of "programatically testing regulatory data":http://blog.memespring.co.uk/2014/07/16/programatically-testing-regulatory-data/ and enabling greater scrutiny is exactly why we should open up more data, so we can cross-check the validity and veracity of public data, and establish feedback loops with users, to encourage improving the quality of our public data at source. Establishing such feedback loops is why one of my favourite Government Digital Service design principles is "make things open, it makes them better":https://www.gov.uk/design-principles#tenth
+
+<img src="https://raw.githubusercontent.com/psd/design-principles-doodles/master/postcards/10-make-things-open-it-makes-them-better.png">
+
+bq. If you have any queries or concerns over this correction please contact us at commercial.services@landregistry.gsi.gov.uk. We welcome your feedback.
+
+I'm a little put off by mention of "commercial services", but I sent them mail with a link to this post.
+
+This blip has taken the wind out of my sails a little, but I'll aim to pick up with another post in the series "tomorrow".
+
+<i>"Owen Boswarva":http://www.owenboswarva.com/ has shared similar thoughts on this issue in his post "how far can we trust open data":http://mapgubbins.tumblr.com/post/103854046790/how-far-can-we-trust-open-data</i>
